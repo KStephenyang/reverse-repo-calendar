@@ -94,10 +94,9 @@ python -m http.server 8080 -d docs
 
 1. 将代码推送到 GitHub
 2. 进入仓库 **Settings** → **Pages**
-3. **Source** 选择 **Deploy from a branch**
-4. **Branch** 选择 `gh-pages`，文件夹选 `/ (root)`，点击 **Save**
-5. 进入 **Actions** → **Daily Data Update & Deploy** → **Run workflow**
-6. 等待运行完成，访问 `https://<你的用户名>.github.io/reverse-repo-calendar/`
+3. **Source** 选择 **GitHub Actions**（不是 "Deploy from a branch"）
+4. 进入 **Actions** → **Daily Data Update & Deploy** → **Run workflow**
+5. 等待运行完成，页面自动发布到 `https://<你的用户名>.github.io/reverse-repo-calendar/`
 
 ### 后续更新
 
