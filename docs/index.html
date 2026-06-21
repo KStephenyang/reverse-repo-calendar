@@ -204,8 +204,9 @@ function setupTabs() {
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      // Redraw calendar/charts on tab switch
+      // Redraw calendar/charts on tab switch (Chart.js draws at zero size on hidden canvases)
       if (btn.dataset.tab === 'repo') resizeCalendar();
+      if (btn.dataset.tab === 'forex' && charts.forex) charts.forex.resize();
     });
   });
 }
