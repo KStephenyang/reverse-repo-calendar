@@ -238,6 +238,23 @@ def fetch_forex(existing=None):
     except Exception as e:
         print(f"    CNH (AKShare): {e}")
 
+    # CNH history via forex_hist_em — real daily K-line series (date, open, close, high, low, ...)
+    cnh_history = []
+    try:
+        hdf = ak.forex_hist_em(symbol="USDCNH")
+        if hdf is not None and len(hdf) > 0:
+            cols = hdf.columns.tolist()
+            date_col = cols[0]
+            close_col = next((c for c in cols if "收盘" in str(c)), None) or (cols[2] if len(cols) > 2 else cols[-1])
+            hdf = hdf.tail(HISTORY_DAYS)
+            for _, row in hdf.iterrows():
+                try:
+                    cnh_history.append({"date": str(row[date_col])[:10], "price": float(row[close_col])})
+                except (TypeError, ValueError):
+                    continue
+    except Exception as e:
+        print(f"    CNH history: {e}")
+
     # CNH fallback: free FX API (frankfurter.app — uses ECB rates, close to CNH)
     if cnh["price"] is None:
         try:
@@ -270,7 +287,11 @@ def fetch_forex(existing=None):
     except Exception as e:
         print(f"    CNY: {e}")
 
-    return {"cnh": {"latest": cnh, "date": today_str()},
+    # Preserve previous history if today's fetch failed (keeps chart populated)
+    if not cnh_history and existing:
+        cnh_history = existing.get("forex", {}).get("cnh", {}).get("history", [])
+
+    return {"cnh": {"latest": cnh, "history": cnh_history, "date": today_str()},
             "cny": {"latest": cny, "date": today_str()}}
 
 

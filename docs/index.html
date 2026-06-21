@@ -311,8 +311,7 @@ function renderForex() {
   document.getElementById('cards-forex').innerHTML = [
     {l:'离岸人民币(CNH)', v:cnh.price ? cnh.price.toFixed(4) : '数据获取中', u:'USD/CNH', c:'blue'},
     {l:'在岸人民币(CNY)', v:cny.price ? cny.price.toFixed(4) : '数据获取中', u:'中行折算价', c:'red'},
-  ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('')
-  + '<div class="empty" style="padding:8px;font-size:0.7rem;">汇率数据首次运行需 GitHub Actions 环境（无代理限制），首次 Workflow 执行后将正常显示</div>';
+  ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('') + (cnh.price ? '' : '<div class="empty" style="padding:8px;font-size:0.7rem;">汇率数据首次运行需 GitHub Actions 环境（无代理限制），首次 Workflow 执行后将正常显示</div>');
 
   // Rate cards
   const lpr = (rt.china_lpr && rt.china_lpr.latest) ? rt.china_lpr.latest : {};
@@ -323,15 +322,19 @@ function renderForex() {
     {l:'美国5年期国债', v:us5.yield !== undefined ? us5.yield + '%' : '--', u:us5.date || '', c:'blue'},
   ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
 
-  // Simple forex chart placeholder (CNH history not available in this version)
+  // CNH history chart
   const ctx = document.getElementById('chart-forex');
   if (!ctx) return;
   if (charts.forex) charts.forex.destroy();
-  const labels = D && D.reverse_repo && D.reverse_repo.daily ? Object.keys(D.reverse_repo.daily).slice(-30) : [];
+  const history = (fx.cnh && fx.cnh.history) ? fx.cnh.history : [];
+  const labels = history.map(h => h.date);
+  const prices = history.map(h => h.price);
   charts.forex = new Chart(ctx, {
-    type:'line', data:{ labels, datasets:[] },
+    type:'line',
+    data:{ labels, datasets:[{ label:'USD/CNH', data:prices, borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,0.1)', tension:0.2, pointRadius:0, fill:true }] },
     options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ title:{ display:true, text:'汇率图表（需数据源支持）' } }
+      plugins:{ title:{ display:true, text:'离岸人民币(CNH)走势 — 近30日' }, legend:{ display:false } },
+      scales:{ y:{ ticks:{ callback:v => v.toFixed(3) } } }
     }
   });
 }
