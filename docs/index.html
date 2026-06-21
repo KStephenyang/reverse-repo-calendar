@@ -218,11 +218,11 @@ function chgSign(v) { return v > 0 ? '+' + fmt(v,2) : fmt(v,2); }
 function statusBadge(ok) { return ok==='ok' ? '<span class="status-badge ok">正常</span>' : '<span class="status-badge err">异常</span>'; }
 
 function renderAll() {
-  renderRepo();
-  renderForex();
-  renderFutures();
-  renderSentiment();
-  renderMacro();
+  try { renderRepo(); } catch(e) { console.error('Repo render error:', e); document.getElementById('repo-cards').innerHTML = '<div class="empty">日历加载失败</div>'; }
+  try { renderForex(); } catch(e) { console.error('Forex render error:', e); }
+  try { renderFutures(); } catch(e) { console.error('Futures render error:', e); }
+  try { renderSentiment(); } catch(e) { console.error('Sentiment render error:', e); }
+  try { renderMacro(); } catch(e) { console.error('Macro render error:', e); }
 }
 
 // ============================================================
@@ -231,14 +231,17 @@ function renderAll() {
 function renderRepo() {
   if (!D || !D.reverse_repo) { document.getElementById('repo-cards').innerHTML = '<div class="empty">暂无数据</div>'; return; }
   const rr = D.reverse_repo;
-  const today = new Date().toISOString().split('T')[0];
-  const td = (rr.daily && rr.daily[today]) ? rr.daily[today] : {operation:0, maturity:0, net:0};
+  // Use latest available date (not necessarily today, e.g. weekends)
+  const dates = rr.daily ? Object.keys(rr.daily).sort().reverse() : [];
+  const latestDate = dates.length > 0 ? dates[0] : new Date().toISOString().split('T')[0];
+  const prevDate = dates.length > 1 ? dates[1] : latestDate;
+  const td = (rr.daily && rr.daily[latestDate]) ? rr.daily[latestDate] : {operation:0, maturity:0, net:0};
   const rate = rr.records && rr.records.length > 0 ? rr.records[0].rate : '--';
 
   document.getElementById('repo-cards').innerHTML = [
-    {l:'今日操作量', v:fmtInt(td.operation), u:'亿元', c:'blue'},
-    {l:'今日到期量', v:fmtInt(td.maturity), u:'亿元', c:'red'},
-    {l:'今日净投放', v:(td.net>=0?'+':'')+fmtInt(td.net), u:'亿元', c:td.net>=0?'green':'red'},
+    {l:'最近操作量 ('+latestDate+')', v:fmtInt(td.operation), u:'亿元', c:'blue'},
+    {l:'最近到期量 ('+latestDate+')', v:fmtInt(td.maturity), u:'亿元', c:'red'},
+    {l:'最近净投放', v:(td.net>=0?'+':'')+fmtInt(td.net), u:'亿元', c:td.net>=0?'green':'red'},
     {l:'最新操作利率', v:typeof rate==='number'?rate.toFixed(2):rate, u:'%', c:'purple'},
   ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
 
@@ -296,9 +299,10 @@ function renderForex() {
   const cnh = (fx.cnh && fx.cnh.latest) ? fx.cnh.latest : {};
   const cny = (fx.cny && fx.cny.latest) ? fx.cny.latest : {};
   document.getElementById('cards-forex').innerHTML = [
-    {l:'离岸人民币(CNH)', v:cnh.price ? cnh.price.toFixed(4) : '--', u:'USD/CNH', c:'blue'},
-    {l:'在岸人民币(CNY)', v:cny.price ? cny.price.toFixed(4) : '--', u:'中行折算价', c:'red'},
-  ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
+    {l:'离岸人民币(CNH)', v:cnh.price ? cnh.price.toFixed(4) : '数据获取中', u:'USD/CNH', c:'blue'},
+    {l:'在岸人民币(CNY)', v:cny.price ? cny.price.toFixed(4) : '数据获取中', u:'中行折算价', c:'red'},
+  ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('')
+  + '<div class="empty" style="padding:8px;font-size:0.7rem;">汇率数据首次运行需 GitHub Actions 环境（无代理限制），首次 Workflow 执行后将正常显示</div>';
 
   // Rate cards
   const lpr = (rt.china_lpr && rt.china_lpr.latest) ? rt.china_lpr.latest : {};
@@ -451,9 +455,10 @@ function renderMacro() {
   const szseM = (mg.szse && mg.szse.latest) ? mg.szse.latest : {};
   const totalMargin = (sseM.rzrqye || 0) + (szseM.rzrqye || 0);
   const m2Val = ml.m2_val ? (ml.m2_val / 10000).toFixed(1) : '--';
+  const m1Val = ml.m1_val ? (ml.m1_val / 10000).toFixed(1) : '--';
   document.getElementById('cards-liquidity').innerHTML = [
-    {l:'M2货币供应量', v:m2Val, u:'万亿'+(ml.m2_yoy !== undefined ? ' · '+ml.m2_yoy+'% YoY' : ''), c:'purple'},
-    {l:'M1货币供应量', v:ml.m1_val !== undefined ? fmt(ml.m1_val,0) : '--', u:'亿元'+(ml.m1_yoy !== undefined ? ' · '+ml.m1_yoy+'% YoY' : ''), c:'blue'},
+    {l:'M2货币供应量', v:m2Val, u:'万亿'+(ml.m2_yoy !== undefined ? ' · YoY '+ml.m2_yoy+'%' : ''), c:'purple'},
+    {l:'M1货币供应量', v:m1Val, u:'万亿'+(ml.m1_yoy !== undefined ? ' · YoY '+ml.m1_yoy+'%' : ''), c:'blue'},
     {l:'A股两融余额', v:totalMargin > 0 ? (totalMargin/100000000).toFixed(2)+'亿' : '--', u:'沪深合计', c:totalMargin > 0 ? 'green' : ''},
   ].map(c => `<div class="card ${c.c||''}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
 }

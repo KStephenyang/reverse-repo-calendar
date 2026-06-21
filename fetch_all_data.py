@@ -34,6 +34,23 @@ HISTORY_MONTHS = 12
 CST = timedelta(hours=8)
 
 
+def clean_date(raw: str) -> str:
+    """清洗 DataFrame 中的中文日期格式为 YYYY-MM"""
+    if not raw:
+        return ""
+    s = str(raw)
+    # 移除"年"、"月份"、"月"等中文字符
+    for ch in ["年", "月份", "月", "日"]:
+        s = s.replace(ch, "-" if ch == "年" else "")
+    s = s.strip().rstrip("-").strip()
+    # 检测是否是乱码（含不可读字符）
+    try:
+        s.encode("utf-8")
+    except Exception:
+        return s
+    return s
+
+
 def cst_now():
     return datetime.utcnow() + CST
 
@@ -461,12 +478,12 @@ def fetch_inflation(existing=None):
             # 月份 is col0, 全国-当月 is col1, 全国-同比增长 is col2, 全国-环比增长 is col3
             result["china_cpi"] = {
                 "latest": {
-                    "date": str(df.iloc[0, 0]),
+                    "date": clean_date(df.iloc[0, 0]),
                     "cpi_val": float(df.iloc[0, 1]),
                     "cpi_yoy": float(df.iloc[0, 2]),
                     "cpi_mom": float(df.iloc[0, 3]),
                 },
-                "history": [{"date": str(df.iloc[i, 0]), "cpi_yoy": float(df.iloc[i, 2])}
+                "history": [{"date": clean_date(df.iloc[i, 0]), "cpi_yoy": float(df.iloc[i, 2])}
                             for i in range(min(HISTORY_MONTHS, len(df)))],
             }
         else:
@@ -481,11 +498,11 @@ def fetch_inflation(existing=None):
         if df is not None and len(df) > 0:
             result["china_ppi"] = {
                 "latest": {
-                    "date": str(df.iloc[0, 0]),
+                    "date": clean_date(df.iloc[0, 0]),
                     "ppi_val": float(df.iloc[0, 1]),
                     "ppi_yoy": float(df.iloc[0, 2]),
                 },
-                "history": [{"date": str(df.iloc[i, 0]), "ppi_yoy": float(df.iloc[i, 2])}
+                "history": [{"date": clean_date(df.iloc[i, 0]), "ppi_yoy": float(df.iloc[i, 2])}
                             for i in range(min(HISTORY_MONTHS, len(df)))],
             }
         else:
@@ -532,8 +549,8 @@ def fetch_pmi(existing=None):
         if df is not None and len(df) > 0:
             cols = df.columns.tolist()
             result["china_mfg"] = {
-                "latest": {"date": str(df.iloc[0, 0]), "value": float(df.iloc[0, 1])},
-                "history": [{"date": str(df.iloc[i, 0]), "value": float(df.iloc[i, 1])}
+                "latest": {"date": clean_date(df.iloc[0, 0]), "value": float(df.iloc[0, 1])},
+                "history": [{"date": clean_date(df.iloc[i, 0]), "value": float(df.iloc[i, 1])}
                             for i in range(min(HISTORY_MONTHS, len(df)))],
             }
         else:
@@ -724,13 +741,14 @@ def fetch_money_supply(existing=None):
             cols = df.columns.tolist()
             # cols: 月份, M2-数量(亿元), M2-同比增长, M2-环比增长, M1-数量(亿元), M1-同比增长, ...
             l = df.iloc[0]
+            # cols: 月份, M2数量, M2同比, M2环比, M1数量, M1同比, M1环比, M0数量, M0同比, M0环比
             return {
                 "latest": {
-                    "date": str(l[cols[0]]),
+                    "date": str(l[cols[0]]).replace("年", "-").replace("月份", "").replace("月", "").strip(),
                     "m2_val": float(l[cols[1]]) if len(l) > 1 else None,
                     "m2_yoy": float(l[cols[2]]) if len(l) > 2 else None,
-                    "m1_val": float(l[cols[3]]) if len(l) > 3 else None,
-                    "m1_yoy": float(l[cols[4]]) if len(l) > 4 else None,
+                    "m1_val": float(l[cols[4]]) if len(l) > 4 else None,
+                    "m1_yoy": float(l[cols[5]]) if len(l) > 5 else None,
                 },
                 "history": [],
             }
