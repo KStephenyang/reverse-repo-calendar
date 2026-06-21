@@ -8,6 +8,7 @@
 """
 
 import json
+import os
 import re
 import time
 import traceback
@@ -15,7 +16,25 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
+# Clear proxy env vars to avoid local proxy interference (CI has no proxy)
+for _k in ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy', 'ALL_PROXY', 'all_proxy']:
+    os.environ.pop(_k, None)
+
 import requests
+# Patch requests to ignore system proxy (Windows registry proxy breaks eastmoney etc.)
+# Must patch both Session.trust_env AND the module-level get/post to cover AKShare
+requests.Session.trust_env = False
+_orig_get = requests.get
+_orig_post = requests.post
+def _no_proxy_get(url, **kwargs):
+    kwargs.setdefault('proxies', {'http': None, 'https': None})
+    return _orig_get(url, **kwargs)
+def _no_proxy_post(url, **kwargs):
+    kwargs.setdefault('proxies', {'http': None, 'https': None})
+    return _orig_post(url, **kwargs)
+requests.get = _no_proxy_get
+requests.post = _no_proxy_post
+
 from bs4 import BeautifulSoup
 
 # ============================================================
@@ -57,6 +76,19 @@ def cst_now():
 
 def today_str():
     return cst_now().strftime("%Y-%m-%d")
+
+
+def sanitize(obj):
+    """递归替换 NaN/Infinity 为 None，避免写出非标准 JSON(浏览器 JSON.parse 无法解析)"""
+    if isinstance(obj, float):
+        if obj != obj or obj in (float("inf"), float("-inf")):
+            return None
+        return obj
+    if isinstance(obj, dict):
+        return {k: sanitize(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [sanitize(v) for v in obj]
+    return obj
 
 
 def load_existing():
@@ -188,33 +220,64 @@ def fetch_reverse_repo(existing=None):
 def fetch_forex(existing=None):
     import akshare as ak
 
-    # CNH via forex_spot_em
+    # CNH via forex_spot_em — columns: [序号, 代码, 名称, 最新价, 涨跌额, 涨跌幅, 昨收, ...]
     cnh = {"price": None, "change_pct": 0}
     try:
         df = ak.forex_spot_em()
-        # Find USDCNH row - column 0 is code/name, column 1 is price, column 3 is change%
-        for _, row in df.iterrows():
-            n = str(row.iloc[0])
-            if "离岸" in n or "USDCNH" in n.upper():
-                cnh["price"] = float(row.iloc[1]) if row.iloc[1] else None
-                cnh["change_pct"] = float(row.iloc[3]) if len(row) > 3 and row.iloc[3] else 0
-                break
+        # Search by column name (position-independent)
+        name_col = None
+        price_col = None
+        chg_col = None
+        for c in df.columns:
+            cs = str(c)
+            if "名称" in cs:
+                name_col = c
+            elif "最新价" in cs:
+                price_col = c
+            elif "涨跌幅" in cs:
+                chg_col = c
+        if name_col and price_col:
+            for _, row in df.iterrows():
+                n = str(row[name_col])
+                if "离岸" in n or "CNH" in n.upper():
+                    raw = row[price_col]
+                    if raw is not None:
+                        cnh["price"] = float(raw) / 10000  # Eastmoney scales forex by 10000
+                    if chg_col and row[chg_col] is not None:
+                        cnh["change_pct"] = float(row[chg_col])
+                    break
     except Exception as e:
-        print(f"    CNH: {e}")
+        print(f"    CNH (AKShare): {e}")
 
-    # CNY via currency_boc_safe
+    # CNH fallback: free FX API (frankfurter.app — uses ECB rates, close to CNH)
+    if cnh["price"] is None:
+        try:
+            s = requests.Session()
+            s.trust_env = False
+            r = s.get("https://api.frankfurter.app/latest?from=USD&to=CNY", timeout=10)
+            d = r.json()
+            val = d.get("rates", {}).get("CNY")
+            if val:
+                cnh["price"] = round(float(val), 4)
+                cnh["change_pct"] = 0  # no change% from this source
+                print("    CNH from frankfurter.app")
+        except Exception as e2:
+            print(f"    CNH fallback: {e2}")
+
+    # CNY via currency_boc_safe — columns are currency names (e.g. "美元"), rows are dates
     cny = {"price": None, "change_pct": 0}
     try:
         df = ak.currency_boc_safe()
-        col0 = df.columns[0]
-        for _, row in df.iterrows():
-            if "美元" in str(row[col0]):
-                # Middle rate is typically in column 6 or named '中行折算价'
-                for c in df.columns:
-                    if "折算" in c or "中间" in c:
-                        cny["price"] = float(row[c]) / 100
-                        break
+        # Find the USD column by searching column names
+        usd_col = None
+        for c in df.columns:
+            if "美元" in str(c):
+                usd_col = c
                 break
+        if usd_col is not None and len(df) > 0:
+            # Latest row (DataFrame is oldest-first, so last row is most recent)
+            latest_val = float(df.iloc[-1][usd_col])
+            cny["price"] = latest_val / 100  # Bank of China: 100 USD = X RMB
     except Exception as e:
         print(f"    CNY: {e}")
 
@@ -306,12 +369,14 @@ def fetch_sentiment(existing=None):
     import akshare as ak
     try:
         df = ak.stock_market_pe_lg(symbol="沪深300")
-        # 这个返回 PE/PB 估值数据
+        # Columns: 日期, 总市值, 盈利(近似PE参考)
         if df is not None and len(df) > 0:
             latest = df.iloc[-1]
-            pe_val = float(latest.iloc[1]) if len(latest) > 1 else 50
-            # 基于PE百分位生成情绪值 (0-100)
-            sentiment_val = max(0, min(100, (80 - pe_val) * 5 + 50))
+            # col2 (index 2) = 盈利值, used as PE-like reference (typical range 80-120)
+            pe_ref = float(latest.iloc[2]) if len(latest) > 2 else 100
+            # 基于PE参考值百分位生成情绪值 (0-100)
+            # pe_ref around 80-90 = fear zone, 100 = neutral, 110+ = greed
+            sentiment_val = max(0, min(100, (pe_ref - 80) * 2.5))
             status = "中性"
             if sentiment_val <= 25:
                 status = "极度恐惧"
@@ -325,7 +390,7 @@ def fetch_sentiment(existing=None):
                 status = "极度贪婪"
             return {
                 "latest": {"date": str(latest.iloc[0])[:10] if len(latest) > 0 else today_str(),
-                           "value": round(sentiment_val, 1), "status": status, "note": "基于沪深300 PE估值推算"},
+                           "value": round(sentiment_val, 1), "status": status, "note": "基于沪深300估值推算"},
                 "history": [],
             }
     except Exception as e:
@@ -365,19 +430,22 @@ def fetch_commodities(existing=None):
         print(f"    黄金: {e}")
         result["gold"] = {"latest": None, "history": []}
 
-    # 原油 - 使用国内原油期货
+    # 原油 - 使用国内原油期货 (SC主力合约 via futures_main_sina)
     try:
-        df = ak.get_ine_daily(date=cst_now().strftime("%Y%m%d"))
+        end_d = cst_now().strftime("%Y%m%d")
+        start_d = (cst_now() - timedelta(days=30)).strftime("%Y%m%d")
+        df = ak.futures_main_sina(symbol="SC0", start_date=start_d, end_date=end_d)
         if df is not None and len(df) > 0:
-            sc = df[df.iloc[:, 0].astype(str).str.contains("SC", na=False)]
-            if len(sc) > 0:
-                r = sc.iloc[0]
-                result["oil_cn"] = {
-                    "latest": {"date": today_str(), "price": float(r.iloc[4]) if len(r) > 4 else 0,
-                               "change_pct": float(r.iloc[6]) if len(r) > 6 else 0},
-                }
-            else:
-                result["oil_cn"] = {"latest": None}
+            # Cols: 日期, 开盘价, 最高价, 最低价, 收盘价, 成交量, 持仓量, 动态结算价
+            cols = df.columns.tolist()
+            l = df.iloc[-1]
+            p = df.iloc[-2] if len(df) > 1 else l
+            price = float(l.iloc[4]) if len(l) > 4 else 0
+            prev_price = float(p.iloc[4]) if len(p) > 4 else price
+            pct = (price - prev_price) / prev_price * 100 if prev_price > 0 else 0
+            result["oil_cn"] = {
+                "latest": {"date": str(l.iloc[0])[:10], "price": round(price, 1), "change_pct": round(pct, 2)},
+            }
         else:
             result["oil_cn"] = {"latest": None}
     except Exception as e:
@@ -419,38 +487,25 @@ def fetch_interest_rates(existing=None):
         print(f"    LPR: {e}")
         result["china_lpr"] = {"latest": None, "history": []}
 
-    # 美国5年期国债 - 通过macro_usa获取
+    # 美国5年期国债 - bond_zh_us_rate has col "美国国债收益率5年"
     try:
-        # Use US treasury yield curve
-        df = ak.bond_china_yield(start_date=(cst_now() - timedelta(days=90)).strftime("%Y-%m-%d"),
-                                 end_date=cst_now().strftime("%Y-%m-%d"))
-        # This gives China bond yields, not US. Let's try the macro_usa approach
-    except Exception:
-        pass
-
-    try:
-        df = ak.macro_usa_treasury_yield()
-    except AttributeError:
-        # Try alternative name
-        try:
-            df = ak.bond_investing_global(country="美国", index_name="美国5年期国债收益率",
-                                          period="每日",
-                                          start_date=(cst_now() - timedelta(days=30)).strftime("%Y-%m-%d"),
-                                          end_date=cst_now().strftime("%Y-%m-%d"))
-        except (AttributeError, Exception):
-            df = None
-
-    try:
+        df = ak.bond_zh_us_rate()
         if df is not None and len(df) > 0:
             cols = df.columns.tolist()
-            # Look for 5Y column
-            col_5y = next((c for c in cols if "5" in str(c)), cols[1] if len(cols) > 1 else None)
+            # Find the US 5Y yield column (contains "美国" and "5")
+            col_5y = next((c for c in cols if "美国" in str(c) and "5" in str(c)), None)
+            date_col = cols[0]  # first column is date
             if col_5y:
-                df = df.sort_values(cols[0], ascending=False)
+                df = df.sort_values(date_col, ascending=False)
                 l = df.iloc[0]
-                result["us_treasury_5y"] = {
-                    "latest": {"date": str(l[cols[0]])[:10], "yield": float(l[col_5y])},
-                }
+                val = l[col_5y]
+                import math
+                if val is not None and not (isinstance(val, float) and math.isnan(val)):
+                    result["us_treasury_5y"] = {
+                        "latest": {"date": str(l[date_col])[:10], "yield": float(val)},
+                    }
+                else:
+                    result["us_treasury_5y"] = {"latest": None}
             else:
                 result["us_treasury_5y"] = {"latest": None}
         else:
@@ -511,21 +566,28 @@ def fetch_inflation(existing=None):
         print(f"    PPI: {e}")
         result["china_ppi"] = {"latest": None, "history": []}
 
-    # 美国 CPI - columns: 时间, 今值(%), 现值, 前值
+    # 美国 CPI - columns: 时间, 发布日期, 现值, 前值
     try:
         df = ak.macro_usa_cpi_yoy()
         if df is not None and len(df) > 0:
             cols = df.columns.tolist()
             df = df.sort_values(cols[0], ascending=False)
-            l = df.iloc[0]
-            val1 = l[cols[1]]
-            result["us_cpi"] = {
-                "latest": {
-                    "date": str(l[cols[0]])[:10],
-                    "cpi_yoy": float(str(val1)) if val1 is not None else None,
-                },
-                "history": [],
-            }
+            # cols[2] = 现值 (actual CPI YoY value); cols[1] = 发布日期 (release date)
+            # Fall back to previous row if latest has NaN (unreleased data)
+            import math
+            found = None
+            for i in range(len(df)):
+                raw_val = df.iloc[i][cols[2]]
+                if raw_val is not None and not (isinstance(raw_val, float) and math.isnan(raw_val)):
+                    found = df.iloc[i]
+                    break
+            if found is not None:
+                result["us_cpi"] = {
+                    "latest": {"date": str(found[cols[0]])[:10], "cpi_yoy": float(found[cols[2]])},
+                    "history": [],
+                }
+            else:
+                result["us_cpi"] = {"latest": None, "history": []}
         else:
             result["us_cpi"] = {"latest": None, "history": []}
     except Exception as e:
@@ -559,38 +621,46 @@ def fetch_pmi(existing=None):
         print(f"    China PMI: {e}")
         result["china_mfg"] = {"latest": None, "history": []}
 
-    # 美国 PMI - use macro_usa_ism_pmi or similar
+    # 美国 PMI — macro_usa_ism_pmi returns true ISM data (产品, 时间, 现值, 预测值, 前值)
+    result["us_ism"] = {"latest": None, "history": []}
     try:
-        df = ak.macro_usa_pmi()
+        df = ak.macro_usa_ism_pmi()
         if df is not None and len(df) > 0:
             cols = df.columns.tolist()
-            df = df.sort_values(cols[0], ascending=False)
+            # cols[1] = 时间 (date), cols[2] = 现值 (actual value)
+            date_col = cols[1]
+            val_col = cols[2]
+            df = df.sort_values(date_col, ascending=False)
             l = df.iloc[0]
-            us_val = l[cols[1]]
-            result["us_ism"] = {
-                "latest": {"date": str(l[cols[0]])[:10], "value": float(str(us_val)) if us_val is not None else None},
-                "history": [{"date": str(df.iloc[i, cols[0]])[:10], "value": float(df.iloc[i, cols[1]])}
-                            for i in range(min(HISTORY_MONTHS, len(df))) if len(df.iloc[i]) > 1],
-            }
-        else:
-            result["us_ism"] = {"latest": None, "history": []}
+            raw_val = l[val_col]
+            import math
+            if raw_val is not None and not (isinstance(raw_val, float) and math.isnan(raw_val)):
+                result["us_ism"] = {
+                    "latest": {"date": str(l[date_col])[:10], "value": float(raw_val)},
+                    "history": [{"date": str(r[date_col])[:10], "value": float(r[val_col])}
+                                for _, r in df.head(HISTORY_MONTHS).iterrows()
+                                if r[val_col] is not None and not (isinstance(r[val_col], float) and math.isnan(r[val_col]))],
+                }
     except Exception as e:
-        print(f"    US PMI: {e}")
-        # Try alternative function name
+        print(f"    US ISM PMI: {e}")
+        # Try Markit PMI as fallback
         try:
-            df = ak.macro_usa_ism_pmi()
+            df = ak.macro_usa_pmi()
             if df is not None and len(df) > 0:
                 cols = df.columns.tolist()
-                df = df.sort_values(cols[0], ascending=False)
+                date_col = cols[1]
+                val_col = cols[2]
+                df = df.sort_values(date_col, ascending=False)
                 l = df.iloc[0]
-                result["us_ism"] = {
-                    "latest": {"date": str(l[cols[0]])[:10], "value": float(l[cols[1]]) if len(l) > 1 else None},
-                    "history": [],
-                }
-            else:
-                result["us_ism"] = {"latest": None, "history": []}
+                raw_val = l[val_col]
+                import math
+                if raw_val is not None and not (isinstance(raw_val, float) and math.isnan(raw_val)):
+                    result["us_ism"] = {
+                        "latest": {"date": str(l[date_col])[:10], "value": float(raw_val)},
+                        "history": [],
+                    }
         except Exception:
-            result["us_ism"] = {"latest": None, "history": []}
+            pass
 
     return result
 
@@ -603,17 +673,24 @@ def fetch_employment(existing=None):
     import akshare as ak
     result = {}
 
-    # 中国失业率 - API可能不稳定
+    # 中国失业率 — real columns: [date, item, value]; upstream API may be unstable
     try:
         df = ak.macro_china_urban_unemployment()
         if df is not None and len(df) > 0:
             cols = df.columns.tolist()
-            df = df.sort_values(cols[0], ascending=False)
-            l = df.iloc[0]
-            result["china_unemployment"] = {
-                "latest": {"date": str(l[cols[0]])[:10], "value": float(l[cols[1]]) if len(l) > 1 else None},
-                "history": [],
-            }
+            # cols[0]=date, cols[1]=item(label), cols[2]=value
+            # Filter to the unemployment-rate series if multiple items present
+            if "item" in cols:
+                df = df[df["item"].astype(str).str.contains("失业", na=False)]
+            if len(df) > 0:
+                df = df.sort_values(cols[0], ascending=False)
+                l = df.iloc[0]
+                result["china_unemployment"] = {
+                    "latest": {"date": str(l[cols[0]])[:10], "value": float(l[cols[2]]) if len(l) > 2 else None},
+                    "history": [],
+                }
+            else:
+                result["china_unemployment"] = {"latest": None, "history": []}
         else:
             result["china_unemployment"] = {"latest": None, "history": []}
     except Exception as e:
@@ -631,17 +708,26 @@ def fetch_employment(existing=None):
             nf = df[df[prod_col].astype(str).str.contains("非农", na=False)]
             if len(nf) > 0:
                 nf = nf.sort_values(time_col, ascending=False)
-                l = nf.iloc[0]
-                # Convert value to float - may have non-numeric chars
-                val_str = str(l[val_col]).replace(",", "")
-                try:
-                    val = float(val_str)
-                except ValueError:
-                    val = None
-                result["us_nonfarm"] = {
-                    "latest": {"date": str(l[time_col])[:10], "value": val},
-                    "history": [],
-                }
+                # Fall back to previous row if latest has NaN (unreleased)
+                import math
+                found_row = None
+                for i in range(len(nf)):
+                    raw = nf.iloc[i][val_col]
+                    if raw is not None and not (isinstance(raw, float) and math.isnan(raw)):
+                        found_row = nf.iloc[i]
+                        break
+                if found_row is not None:
+                    val_str = str(found_row[val_col]).replace(",", "")
+                    try:
+                        val = float(val_str)
+                    except ValueError:
+                        val = None
+                    result["us_nonfarm"] = {
+                        "latest": {"date": str(found_row[time_col])[:10], "value": val},
+                        "history": [],
+                    }
+                else:
+                    result["us_nonfarm"] = {"latest": None, "history": []}
             else:
                 result["us_nonfarm"] = {"latest": None, "history": []}
         else:
@@ -656,11 +742,21 @@ def fetch_employment(existing=None):
         if df is not None and len(df) > 0:
             cols = df.columns.tolist()
             df = df.sort_values(cols[1], ascending=False)
-            l = df.iloc[0]
-            result["us_unemployment_rate"] = {
-                "latest": {"date": str(l[cols[1]])[:10], "value": float(l[cols[2]]) if len(l) > 2 else None},
-                "history": [],
-            }
+            # Fall back to previous row if latest has NaN (unreleased)
+            import math
+            found_row = None
+            for i in range(len(df)):
+                raw = df.iloc[i][cols[2]]
+                if raw is not None and not (isinstance(raw, float) and math.isnan(raw)):
+                    found_row = df.iloc[i]
+                    break
+            if found_row is not None:
+                result["us_unemployment_rate"] = {
+                    "latest": {"date": str(found_row[cols[1]])[:10], "value": float(found_row[cols[2]])},
+                    "history": [],
+                }
+            else:
+                result["us_unemployment_rate"] = {"latest": None, "history": []}
         else:
             result["us_unemployment_rate"] = {"latest": None, "history": []}
     except Exception as e:
@@ -806,7 +902,8 @@ def main():
     # 写入
     print(f"\n{'='*60}")
     print("  写入输出...")
-    OUTPUT_FILE.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
+    output = sanitize(output)
+    OUTPUT_FILE.write_text(json.dumps(output, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
     sz = OUTPUT_FILE.stat().st_size
     print(f"  文件: {OUTPUT_FILE} ({sz:,} bytes)")
 

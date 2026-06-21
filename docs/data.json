@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-21T14:14:51+08:00",
+  "updated_at": "2026-06-21T16:06:13+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -364,14 +364,14 @@
   "forex": {
     "cnh": {
       "latest": {
-        "price": null,
+        "price": 6.7693,
         "change_pct": 0
       },
       "date": "2026-06-21"
     },
     "cny": {
       "latest": {
-        "price": null,
+        "price": 6.813,
         "change_pct": 0
       },
       "date": "2026-06-21"
@@ -398,9 +398,9 @@
   "sentiment": {
     "latest": {
       "date": "2026-06-18",
-      "value": 0,
-      "status": "极度恐惧",
-      "note": "基于沪深300 PE估值推算"
+      "value": 65.2,
+      "status": "贪婪",
+      "note": "基于沪深300估值推算"
     },
     "history": []
   },
@@ -535,7 +535,11 @@
       ]
     },
     "oil_cn": {
-      "latest": null
+      "latest": {
+        "date": "2026-06-18",
+        "price": 508.5,
+        "change_pct": -0.33
+      }
     }
   },
   "rates": {
@@ -548,7 +552,10 @@
       "history": []
     },
     "us_treasury_5y": {
-      "latest": null
+      "latest": {
+        "date": "2026-06-18",
+        "yield": 4.23
+      }
     }
   },
   "inflation": {
@@ -668,7 +675,10 @@
       ]
     },
     "us_cpi": {
-      "latest": null,
+      "latest": {
+        "date": "2026-05-01",
+        "cpi_yoy": 4.2
+      },
       "history": []
     }
   },
@@ -730,8 +740,56 @@
       ]
     },
     "us_ism": {
-      "latest": null,
-      "history": []
+      "latest": {
+        "date": "2025-09-02",
+        "value": 48.7
+      },
+      "history": [
+        {
+          "date": "2025-09-02",
+          "value": 48.7
+        },
+        {
+          "date": "2025-08-01",
+          "value": 48.0
+        },
+        {
+          "date": "2025-07-01",
+          "value": 49.0
+        },
+        {
+          "date": "2025-06-02",
+          "value": 48.5
+        },
+        {
+          "date": "2025-05-01",
+          "value": 48.7
+        },
+        {
+          "date": "2025-04-01",
+          "value": 49.0
+        },
+        {
+          "date": "2025-03-03",
+          "value": 50.3
+        },
+        {
+          "date": "2025-02-03",
+          "value": 50.9
+        },
+        {
+          "date": "2025-01-03",
+          "value": 49.3
+        },
+        {
+          "date": "2024-12-02",
+          "value": 48.4
+        },
+        {
+          "date": "2024-11-01",
+          "value": 46.5
+        }
+      ]
     }
   },
   "employment": {
@@ -741,15 +799,15 @@
     },
     "us_nonfarm": {
       "latest": {
-        "date": "2025-09-05",
-        "value": NaN
+        "date": "2025-08-01",
+        "value": 7.3
       },
       "history": []
     },
     "us_unemployment_rate": {
       "latest": {
-        "date": "2025-09-05",
-        "value": NaN
+        "date": "2025-08-01",
+        "value": 4.2
       },
       "history": []
     }
