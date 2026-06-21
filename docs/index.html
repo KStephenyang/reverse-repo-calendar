@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>央行逆回购操作日历</title>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text: #1e293b;
+    --text-secondary: #64748b;
+    --border: #e2e8f0;
+    --operation: #3b82f6;
+    --maturity: #ef4444;
+    --net-positive: #22c55e;
+    --net-negative: #ef4444;
+    --today-ring: #3b82f6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+  }
+  .header h1 { font-size: 1.6rem; font-weight: 700; }
+  .header .sub { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+
+  /* Summary Cards */
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .card .label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; }
+  .card .value { font-size: 1.6rem; font-weight: 700; }
+  .card .unit { font-size: 0.75rem; color: var(--text-secondary); }
+  .card.operation .value { color: var(--operation); }
+  .card.maturity .value { color: var(--maturity); }
+  .card.net .value.positive { color: var(--net-positive); }
+  .card.net .value.negative { color: var(--net-negative); }
+  .card.rate .value { color: #8b5cf6; }
+
+  /* Calendar */
+  .calendar-wrap {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 0 16px;
+  }
+  #calendar {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  /* FullCalendar overrides */
+  .fc {
+    --fc-border-color: var(--border);
+    --fc-today-bg-color: #eff6ff;
+    --fc-neutral-bg-color: #f8fafc;
+  }
+  .fc .fc-toolbar-title { font-size: 1.2rem !important; }
+  .fc .fc-button {
+    font-size: 0.85rem !important;
+    padding: 6px 12px !important;
+    border-radius: 8px !important;
+  }
+  .fc .fc-button-primary {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+  }
+
+  /* Day cell content */
+  .day-content { font-size: 0.7rem; line-height: 1.3; padding: 2px 0; }
+  .day-op { color: var(--operation); font-weight: 600; }
+  .day-mat { color: var(--maturity); font-weight: 600; }
+  .day-net-pos { color: var(--net-positive); }
+  .day-net-neg { color: var(--net-negative); }
+
+  /* Legend */
+  .legend {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    padding: 0 16px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot.op { background: var(--operation); }
+  .dot.mat { background: var(--maturity); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+  .footer a { color: #2563eb; }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.3rem; }
+    .summary { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .card { padding: 12px; }
+    .card .value { font-size: 1.3rem; }
+    .fc .fc-toolbar { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>央行逆回购操作日历</h1>
+  <div class="sub">中国人民银行 · 公开市场业务交易公告 · 数据每日更新</div>
+</div>
+
+<div class="summary" id="summary">
+  <div class="card operation">
+    <div class="label">今日操作量</div>
+    <div class="value" id="today-op">--</div>
+    <div class="unit">亿元</div>
+  </div>
+  <div class="card maturity">
+    <div class="label">今日到期量</div>
+    <div class="value" id="today-mat">--</div>
+    <div class="unit">亿元</div>
+  </div>
+  <div class="card net">
+    <div class="label">今日净投放</div>
+    <div class="value" id="today-net">--</div>
+    <div class="unit">亿元</div>
+  </div>
+  <div class="card rate">
+    <div class="label">最新操作利率</div>
+    <div class="value" id="latest-rate">--</div>
+    <div class="unit">%</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><span class="dot op"></span> 操作（投放）</span>
+  <span><span class="dot mat"></span> 到期（回笼）</span>
+</div>
+
+<div class="calendar-wrap">
+  <div id="calendar"></div>
+</div>
+
+<div class="footer">
+  数据来源: <a href="http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125431/125475/" target="_blank">中国人民银行 · 公开市场业务交易公告</a>
+  &nbsp;|&nbsp; 每日 18:00 CST 自动更新
+  &nbsp;|&nbsp; Powered by <a href="https://github.com/akfamily/akshare" target="_blank">AKShare</a>
+</div>
+
+<script>
+// ============================================================
+// Load & Render Data
+// ============================================================
+async function loadData() {
+  try {
+    const resp = await fetch('data.json');
+    return await resp.json();
+  } catch(e) {
+    console.error('Failed to load data:', e);
+    return null;
+  }
+}
+
+function getToday() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function renderSummary(data) {
+  if (!data || !data.daily) return;
+  const today = getToday();
+  const todayData = data.daily[today];
+
+  if (todayData) {
+    document.getElementById('today-op').textContent = todayData.operation;
+    document.getElementById('today-mat').textContent = todayData.maturity;
+    const netEl = document.getElementById('today-net');
+    netEl.textContent = (todayData.net >= 0 ? '+' : '') + todayData.net;
+    netEl.className = 'value ' + (todayData.net >= 0 ? 'positive' : 'negative');
+  } else {
+    document.getElementById('today-op').textContent = '--';
+    document.getElementById('today-mat').textContent = '--';
+    document.getElementById('today-net').textContent = '--';
+  }
+
+  // Latest rate
+  if (data.records && data.records.length > 0) {
+    document.getElementById('latest-rate').textContent = data.records[0].rate.toFixed(2);
+  }
+}
+
+function renderCalendar(data) {
+  if (!data) return;
+
+  const calendarEl = document.getElementById('calendar');
+  const events = [];
+
+  // Build events from daily data
+  if (data.daily) {
+    for (const [date, d] of Object.entries(data.daily)) {
+      if (d.operation > 0) {
+        events.push({
+          title: `投放 ${d.operation}亿`,
+          start: date,
+          allDay: true,
+          backgroundColor: '#3b82f6',
+          borderColor: '#3b82f6',
+          textColor: '#fff',
+          extendedProps: { type: 'operation', amount: d.operation }
+        });
+      }
+      if (d.maturity > 0) {
+        // Only show maturity on days with no operation (to avoid clutter)
+        if (d.operation === 0) {
+          events.push({
+            title: `到期 ${d.maturity}亿`,
+            start: date,
+            allDay: true,
+            backgroundColor: '#fecaca',
+            borderColor: '#ef4444',
+            textColor: '#991b1b',
+            extendedProps: { type: 'maturity', amount: d.maturity }
+          });
+        }
+      }
+    }
+  }
+
+  // For days with BOTH operation and maturity, create a combined event
+  const combinedEvents = [];
+  if (data.daily) {
+    for (const [date, d] of Object.entries(data.daily)) {
+      if (d.operation > 0 && d.maturity > 0) {
+        const net = d.net;
+        const netLabel = net >= 0 ? `+${net}` : `${net}`;
+        combinedEvents.push({
+          title: `投放${d.operation}亿 到期${d.maturity}亿`,
+          start: date,
+          allDay: true,
+          backgroundColor: net >= 0 ? '#22c55e' : '#f97316',
+          borderColor: net >= 0 ? '#16a34a' : '#ea580c',
+          textColor: '#fff',
+          extendedProps: { type: 'both', operation: d.operation, maturity: d.maturity, net: net }
+        });
+      }
+    }
+  }
+
+  // Remove original events that overlap with combined ones
+  const combinedDates = new Set(combinedEvents.map(e => e.start));
+  const filtered = events.filter(e => !combinedDates.has(e.start));
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'zh-cn',
+    firstDay: 1,
+    height: 'auto',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,dayGridWeek'
+    },
+    buttonText: {
+      today: '今天',
+      month: '月',
+      week: '周'
+    },
+    events: [...filtered, ...combinedEvents],
+    eventDisplay: 'block',
+    dayMaxEvents: 3,
+    // Tooltip on hover
+    eventDidMount: function(info) {
+      const props = info.event.extendedProps;
+      let tooltip = '';
+      if (props.type === 'operation') {
+        tooltip = `操作量: ${props.amount}亿元`;
+      } else if (props.type === 'maturity') {
+        tooltip = `到期量: ${props.amount}亿元`;
+      } else if (props.type === 'both') {
+        tooltip = `操作: ${props.operation}亿元\n到期: ${props.maturity}亿元\n净投放: ${props.net >= 0 ? '+' : ''}${props.net}亿元`;
+      }
+      info.el.title = tooltip;
+    },
+    // Custom day cell rendering for non-event days
+    dayCellDidMount: function(info) {
+      const dateStr = info.date.toISOString().split('T')[0];
+      if (data.daily && data.daily[dateStr]) {
+        const d = data.daily[dateStr];
+        if (!combinedDates.has(dateStr) && d.maturity > 0 && d.operation > 0) {
+          // Already covered by combined events
+        }
+      }
+    }
+  });
+
+  calendar.render();
+}
+
+// Init
+(async function() {
+  const data = await loadData();
+  renderSummary(data);
+  renderCalendar(data);
+
+  // Show update time
+  if (data && data.updated_at) {
+    const el = document.querySelector('.header .sub');
+    el.textContent += ' · 更新于 ' + data.updated_at;
+  }
+})();
+</script>
+</body>
+</html>

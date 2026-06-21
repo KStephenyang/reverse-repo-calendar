@@ -1,0 +1,38 @@
+name: Daily Data Update
+
+on:
+  schedule:
+    # 每天北京时间 18:00 (UTC 10:00)
+    - cron: '0 10 * * *'
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 lxml
+
+      - name: Fetch reverse repo data
+        run: python fetch_data.py
+
+      - name: Commit and push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "📊 Update reverse repo data [skip ci]"
+          file_pattern: 'docs/data.json'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
