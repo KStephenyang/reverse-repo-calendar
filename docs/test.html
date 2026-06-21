@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>Test</title></head>
+<body>
+<h2>Data Test</h2>
+<div id="out">Loading...</div>
+<script>
+(async function() {
+  try {
+    const resp = await fetch('data.json');
+    const D = await resp.json();
+    let html = '<h3>OK! Data loaded</h3>';
+    html += '<p>Updated: ' + D.updated_at + '</p>';
+    html += '<p>Status: ' + JSON.stringify(D.fetch_status) + '</p>';
+    if (D.reverse_repo) {
+      html += '<p>Reverse repo records: ' + D.reverse_repo.records.length + '</p>';
+      const dates = Object.keys(D.reverse_repo.daily).sort().reverse();
+      html += '<p>Latest daily dates: ' + dates.slice(0,3).join(', ') + '</p>';
+      html += '<p>Latest data: ' + JSON.stringify(D.reverse_repo.daily[dates[0]]) + '</p>';
+    }
+    if (D.inflation && D.inflation.china_cpi && D.inflation.china_cpi.latest) {
+      html += '<p>CPI: ' + JSON.stringify(D.inflation.china_cpi.latest) + '</p>';
+    }
+    if (D.money_supply && D.money_supply.latest) {
+      html += '<p>Money: ' + JSON.stringify(D.money_supply.latest) + '</p>';
+    }
+    html += '<pre>' + JSON.stringify(D, null, 2).substring(0, 2000) + '...</pre>';
+    document.getElementById('out').innerHTML = html;
+  } catch(e) {
+    document.getElementById('out').innerHTML = '<h1 style="color:red">ERROR: ' + e.message + '</h1><pre>' + e.stack + '</pre>';
+  }
+})();
+</script>
+</body></html>
