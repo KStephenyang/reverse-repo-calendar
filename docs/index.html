@@ -182,9 +182,11 @@ let calendars = {};
 let charts = {};
 
 async function init() {
+  console.log('Fetching data.json...');
   try {
     const resp = await fetch('data.json?' + Date.now());
     D = await resp.json();
+    console.log('Data loaded:', D ? Object.keys(D).join(', ') : 'NULL');
   } catch(e) { console.error('Load failed:', e); D = null; }
 
   document.getElementById('header-sub').textContent =
@@ -192,6 +194,7 @@ async function init() {
 
   renderAll();
   setupTabs();
+  console.log('Init complete. Reverse repo records:', D && D.reverse_repo ? D.reverse_repo.records.length : 0);
 }
 
 function setupTabs() {
@@ -209,13 +212,20 @@ function setupTabs() {
 
 function fmt(n, d=2) {
   if (n === null || n === undefined || isNaN(n)) return '--';
-  return Number(n).toLocaleString('zh-CN', {minimumFractionDigits:d, maximumFractionDigits:d});
+  try {
+    return Number(n).toLocaleString('zh-CN', {minimumFractionDigits:d, maximumFractionDigits:d});
+  } catch(e) {
+    return Number(n).toFixed(d);
+  }
 }
 function fmtInt(n) { return fmt(n, 0); }
 function fmtB(n) { return fmt(n/100000000, 2) + '亿'; }
 function chgCls(v) { return v > 0 ? 'up' : v < 0 ? 'down' : ''; }
 function chgSign(v) { return v > 0 ? '+' + fmt(v,2) : fmt(v,2); }
 function statusBadge(ok) { return ok==='ok' ? '<span class="status-badge ok">正常</span>' : '<span class="status-badge err">异常</span>'; }
+
+// Debug helper
+console.log('Page loaded, starting init...');
 
 function renderAll() {
   try { renderRepo(); } catch(e) { console.error('Repo render error:', e); document.getElementById('repo-cards').innerHTML = '<div class="empty">日历加载失败</div>'; }
