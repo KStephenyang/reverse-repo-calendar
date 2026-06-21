@@ -16,24 +16,13 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
-# Clear proxy env vars to avoid local proxy interference (CI has no proxy)
+# Suppress proxy env vars that may interfere with outbound requests
 for _k in ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy', 'ALL_PROXY', 'all_proxy']:
     os.environ.pop(_k, None)
 
 import requests
-# Patch requests to ignore system proxy (Windows registry proxy breaks eastmoney etc.)
-# Must patch both Session.trust_env AND the module-level get/post to cover AKShare
-requests.Session.trust_env = False
-_orig_get = requests.get
-_orig_post = requests.post
-def _no_proxy_get(url, **kwargs):
-    kwargs.setdefault('proxies', {'http': None, 'https': None})
-    return _orig_get(url, **kwargs)
-def _no_proxy_post(url, **kwargs):
-    kwargs.setdefault('proxies', {'http': None, 'https': None})
-    return _orig_post(url, **kwargs)
-requests.get = _no_proxy_get
-requests.post = _no_proxy_post
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from bs4 import BeautifulSoup
 

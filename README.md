@@ -50,12 +50,13 @@ GitHub Actions (每天 21:00 CST)
   → Python 脚本抓取 11 类金融数据
   → 每个数据源独立 try/except 降级
   → 输出 docs/data.json
-  → 自动提交到 Git
+  → 部署 docs/ 到 GitHub Pages
+  → 同时提交 data.json 回仓库
 
-Cloudflare Pages
-  → 监听 Git push
-  → 部署静态站点
-  → Tab 式看板 + Chart.js 图表渲染
+GitHub Pages
+  → 托管在 gh-pages 分支
+  → 静态站点 (HTML + JSON + Chart.js)
+  → 每次 Action 运行后自动刷新
 ```
 
 ## 项目结构
@@ -64,7 +65,7 @@ Cloudflare Pages
 reverse-repo-calendar/
 ├── .github/workflows/
 │   └── daily-update.yml      # 每日定时更新 (21:00 CST)
-├── docs/                     # Cloudflare Pages 部署目录
+├── docs/                     # GitHub Pages 部署目录
 │   ├── index.html            # 看板前端 (5 Tab + Chart.js)
 │   └── data.json             # 每日数据 (自动更新)
 ├── fetch_all_data.py         # 全数据抓取脚本 (11个数据源)
@@ -87,13 +88,21 @@ python -m http.server 8080 -d docs
 # 打开 http://localhost:8080
 ```
 
-## 部署到 Cloudflare Pages
+## 部署到 GitHub Pages
+
+### 首次部署
 
 1. 将代码推送到 GitHub
-2. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **连接到 Git**
-3. 选择仓库，构建设置：**构建命令留空**，**输出目录** 填 `docs`
-4. 部署完成后获得 URL
-5. 在 GitHub 仓库 → **Actions** → **Daily Data Update** → **Run workflow** 手动触发首次更新
+2. 进入仓库 **Settings** → **Pages**
+3. **Source** 选择 **Deploy from a branch**
+4. **Branch** 选择 `gh-pages`，文件夹选 `/ (root)`，点击 **Save**
+5. 进入 **Actions** → **Daily Data Update & Deploy** → **Run workflow**
+6. 等待运行完成，访问 `https://<你的用户名>.github.io/reverse-repo-calendar/`
+
+### 后续更新
+
+- GitHub Actions 每天 21:00 CST 自动运行，无需手动操作
+- 也可在 Actions 页面手动触发更新
 
 ## 数据说明
 
