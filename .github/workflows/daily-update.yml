@@ -7,23 +7,12 @@ on:
   # 允许手动触发
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
@@ -42,7 +31,7 @@ jobs:
       - name: Fetch all financial data
         run: python fetch_all_data.py
 
-      - name: Commit data.json to repo
+      - name: Commit data.json to main
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "📊 Update financial dashboard data [skip ci]"
@@ -50,14 +39,23 @@ jobs:
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './docs'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy docs/ to gh-pages branch
+        run: |
+          # Copy docs/ content to gh-pages branch
+          git fetch origin gh-pages || true
+          # Save docs directory
+          cp -r docs /tmp/docs_deploy
+          # Switch to gh-pages branch (create if needed)
+          git checkout gh-pages 2>/dev/null || git checkout --orphan gh-pages
+          # Clean everything
+          git rm -rf . 2>/dev/null || true
+          # Copy docs content
+          cp -r /tmp/docs_deploy/* .
+          # Add .nojekyll to prevent Jekyll processing
+          touch .nojekyll
+          # Commit and push
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --staged --quiet || git commit -m "🚀 Deploy dashboard [skip ci]"
+          git push origin gh-pages --force
