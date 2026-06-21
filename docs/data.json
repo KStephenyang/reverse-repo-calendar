@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-21T16:06:13+08:00",
+  "updated_at": "2026-06-21T16:13:35+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -391,7 +391,7 @@
       "products": []
     },
     "czce": {
-      "date": "20260619",
+      "date": null,
       "products": []
     }
   },
@@ -975,13 +975,7 @@
       ]
     },
     "szse": {
-      "latest": {
-        "date": "20260621",
-        "rzye": 7077.67,
-        "rzmre": 321.08,
-        "rqye": 24.34,
-        "rzrqye": 7234.97
-      },
+      "latest": null,
       "history": []
     }
   },
