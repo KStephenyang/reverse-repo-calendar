@@ -255,20 +255,47 @@ def fetch_forex(existing=None):
     except Exception as e:
         print(f"    CNH history: {e}")
 
+    # frankfurter.app fallback session — AKShare's Eastmoney/safe.gov.cn sources are
+    # domestic-China endpoints that frequently fail from GitHub Actions' overseas IPs
+    # even though they work fine on a local network, so this covers both the price
+    # and the history when that happens.
+    def _frankfurter_latest():
+        s = requests.Session()
+        s.trust_env = False
+        r = s.get("https://api.frankfurter.app/latest?from=USD&to=CNY", timeout=10)
+        val = r.json().get("rates", {}).get("CNY")
+        return round(float(val), 4) if val else None
+
+    def _frankfurter_history(days):
+        s = requests.Session()
+        s.trust_env = False
+        end = datetime.now()
+        start = end - timedelta(days=int(days * 1.6) + 5)  # pad for weekends/holidays
+        url = f"https://api.frankfurter.app/{start:%Y-%m-%d}..{end:%Y-%m-%d}?from=USD&to=CNY"
+        r = s.get(url, timeout=10)
+        rates = r.json().get("rates", {})
+        out = [{"date": d, "price": round(float(v["CNY"]), 4)} for d, v in sorted(rates.items()) if "CNY" in v]
+        return out[-days:]
+
     # CNH fallback: free FX API (frankfurter.app — uses ECB rates, close to CNH)
     if cnh["price"] is None:
         try:
-            s = requests.Session()
-            s.trust_env = False
-            r = s.get("https://api.frankfurter.app/latest?from=USD&to=CNY", timeout=10)
-            d = r.json()
-            val = d.get("rates", {}).get("CNY")
+            val = _frankfurter_latest()
             if val:
-                cnh["price"] = round(float(val), 4)
+                cnh["price"] = val
                 cnh["change_pct"] = 0  # no change% from this source
                 print("    CNH from frankfurter.app")
         except Exception as e2:
             print(f"    CNH fallback: {e2}")
+
+    # CNH history fallback: AKShare's forex_hist_em hits Eastmoney, which often fails in CI
+    if not cnh_history:
+        try:
+            cnh_history = _frankfurter_history(HISTORY_DAYS)
+            if cnh_history:
+                print("    CNH history from frankfurter.app")
+        except Exception as e2:
+            print(f"    CNH history fallback: {e2}")
 
     # CNY via currency_boc_safe — columns are currency names (e.g. "美元"), rows are dates
     cny = {"price": None, "change_pct": 0}
@@ -286,6 +313,17 @@ def fetch_forex(existing=None):
             cny["price"] = latest_val / 100  # Bank of China: 100 USD = X RMB
     except Exception as e:
         print(f"    CNY: {e}")
+
+    # CNY fallback: currency_boc_safe scrapes safe.gov.cn (3 sequential requests), which
+    # frequently fails from CI; approximate with frankfurter.app's interbank rate instead
+    if cny["price"] is None:
+        try:
+            val = cnh["price"] if cnh["price"] is not None else _frankfurter_latest()
+            if val:
+                cny["price"] = val
+                print("    CNY from frankfurter.app (approx.)")
+        except Exception as e2:
+            print(f"    CNY fallback: {e2}")
 
     # Preserve previous history if today's fetch failed (keeps chart populated)
     if not cnh_history and existing:
