@@ -1,353 +1,934 @@
 {
-  "updated_at": "2026-06-21 13:10:01",
-  "total_records": 17,
-  "date_range": {
-    "from": "2026-05-25",
-    "to": "2026-06-18"
+  "updated_at": "2026-06-21T14:09:04+08:00",
+  "fetch_status": {
+    "reverse_repo": "ok",
+    "forex": "ok",
+    "futures": "ok",
+    "sentiment": "ok",
+    "commodities": "ok",
+    "rates": "ok",
+    "inflation": "ok",
+    "pmi": "ok",
+    "employment": "ok",
+    "margin": "ok",
+    "money_supply": "ok"
   },
-  "records": [
-    {
+  "fetch_errors": {},
+  "reverse_repo": {
+    "records": [
+      {
+        "date": "2026-06-18",
+        "term": 7,
+        "total_amount": 2480,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 2480,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-17",
+        "term": 7,
+        "total_amount": 4203,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 4203,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-16",
+        "term": 7,
+        "total_amount": 4495,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 4495,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-15",
+        "term": 7,
+        "total_amount": 4250,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 4250,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-12",
+        "term": 7,
+        "total_amount": 3930,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 3930,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-11",
+        "term": 7,
+        "total_amount": 1885,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 1885,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-10",
+        "term": 7,
+        "total_amount": 1590,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 1590,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-09",
+        "term": 7,
+        "total_amount": 1530,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 1530,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-08",
+        "term": 7,
+        "total_amount": 2185,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 2185,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-05",
+        "term": 7,
+        "total_amount": 2150,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 2150,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-02",
+        "term": 7,
+        "total_amount": 2,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 2,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-06-01",
+        "term": 7,
+        "total_amount": 110,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 110,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-05-29",
+        "term": 7,
+        "total_amount": 1230,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 1230,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-05-28",
+        "term": 7,
+        "total_amount": 1013,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 1013,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-05-27",
+        "term": 7,
+        "total_amount": 1776,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 1776,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-05-26",
+        "term": 7,
+        "total_amount": 2490,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 2490,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-05-25",
+        "term": 7,
+        "total_amount": 2580,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 2580,
+            "rate": 1.4
+          }
+        ]
+      }
+    ],
+    "daily": {
+      "2026-05-25": {
+        "operation": 2580,
+        "maturity": 0,
+        "net": 2580
+      },
+      "2026-05-26": {
+        "operation": 2490,
+        "maturity": 0,
+        "net": 2490
+      },
+      "2026-05-27": {
+        "operation": 1776,
+        "maturity": 0,
+        "net": 1776
+      },
+      "2026-05-28": {
+        "operation": 1013,
+        "maturity": 0,
+        "net": 1013
+      },
+      "2026-05-29": {
+        "operation": 1230,
+        "maturity": 0,
+        "net": 1230
+      },
+      "2026-06-01": {
+        "operation": 110,
+        "maturity": 2580,
+        "net": -2470
+      },
+      "2026-06-02": {
+        "operation": 2,
+        "maturity": 2490,
+        "net": -2488
+      },
+      "2026-06-03": {
+        "operation": 0,
+        "maturity": 1776,
+        "net": -1776
+      },
+      "2026-06-04": {
+        "operation": 0,
+        "maturity": 1013,
+        "net": -1013
+      },
+      "2026-06-05": {
+        "operation": 2150,
+        "maturity": 1230,
+        "net": 920
+      },
+      "2026-06-08": {
+        "operation": 2185,
+        "maturity": 110,
+        "net": 2075
+      },
+      "2026-06-09": {
+        "operation": 1530,
+        "maturity": 2,
+        "net": 1528
+      },
+      "2026-06-10": {
+        "operation": 1590,
+        "maturity": 0,
+        "net": 1590
+      },
+      "2026-06-11": {
+        "operation": 1885,
+        "maturity": 0,
+        "net": 1885
+      },
+      "2026-06-12": {
+        "operation": 3930,
+        "maturity": 2150,
+        "net": 1780
+      },
+      "2026-06-15": {
+        "operation": 4250,
+        "maturity": 2185,
+        "net": 2065
+      },
+      "2026-06-16": {
+        "operation": 4495,
+        "maturity": 1530,
+        "net": 2965
+      },
+      "2026-06-17": {
+        "operation": 4203,
+        "maturity": 1590,
+        "net": 2613
+      },
+      "2026-06-18": {
+        "operation": 2480,
+        "maturity": 1885,
+        "net": 595
+      },
+      "2026-06-19": {
+        "operation": 0,
+        "maturity": 3930,
+        "net": -3930
+      },
+      "2026-06-22": {
+        "operation": 0,
+        "maturity": 4250,
+        "net": -4250
+      },
+      "2026-06-23": {
+        "operation": 0,
+        "maturity": 4495,
+        "net": -4495
+      },
+      "2026-06-24": {
+        "operation": 0,
+        "maturity": 4203,
+        "net": -4203
+      },
+      "2026-06-25": {
+        "operation": 0,
+        "maturity": 2480,
+        "net": -2480
+      }
+    }
+  },
+  "forex": {
+    "cnh": {
+      "latest": {
+        "price": null,
+        "change_pct": 0
+      },
+      "date": "2026-06-21"
+    },
+    "cny": {
+      "latest": {
+        "price": null,
+        "change_pct": 0
+      },
+      "date": "2026-06-21"
+    }
+  },
+  "futures": {
+    "shfe": {
+      "date": "20260619",
+      "products": []
+    },
+    "cffex": {
+      "date": "20260619",
+      "products": []
+    },
+    "dce": {
+      "date": "20260619",
+      "products": []
+    },
+    "czce": {
+      "date": "20260619",
+      "products": []
+    }
+  },
+  "sentiment": {
+    "latest": {
       "date": "2026-06-18",
-      "term": 7,
-      "total_amount": 2480,
-      "rate": 1.4,
-      "ops_detail": [
+      "value": 0,
+      "status": "极度恐惧",
+      "note": "基于沪深300 PE估值推算"
+    },
+    "history": []
+  },
+  "commodities": {
+    "gold": {
+      "latest": {
+        "date": "2026-06-18",
+        "price": 935.86,
+        "change_pct": -0.35
+      },
+      "history": [
         {
-          "term": 7,
-          "amount": 2480,
-          "rate": 1.4
+          "date": "2026-06-18",
+          "price": 935.86
+        },
+        {
+          "date": "2026-06-17",
+          "price": 939.18
+        },
+        {
+          "date": "2026-06-16",
+          "price": 940.48
+        },
+        {
+          "date": "2026-06-15",
+          "price": 937.51
+        },
+        {
+          "date": "2026-06-12",
+          "price": 907.47
+        },
+        {
+          "date": "2026-06-11",
+          "price": 896.01
+        },
+        {
+          "date": "2026-06-10",
+          "price": 915.63
+        },
+        {
+          "date": "2026-06-09",
+          "price": 944.98
+        },
+        {
+          "date": "2026-06-08",
+          "price": 941.01
+        },
+        {
+          "date": "2026-06-05",
+          "price": 974.41
+        },
+        {
+          "date": "2026-06-04",
+          "price": 974.5
+        },
+        {
+          "date": "2026-06-03",
+          "price": 972.8
+        },
+        {
+          "date": "2026-06-02",
+          "price": 987.45
+        },
+        {
+          "date": "2026-06-01",
+          "price": 980.6
+        },
+        {
+          "date": "2026-05-29",
+          "price": 984.96
+        },
+        {
+          "date": "2026-05-28",
+          "price": 961.82
+        },
+        {
+          "date": "2026-05-27",
+          "price": 982.53
+        },
+        {
+          "date": "2026-05-26",
+          "price": 991.97
+        },
+        {
+          "date": "2026-05-25",
+          "price": 997.0
+        },
+        {
+          "date": "2026-05-22",
+          "price": 992.1
+        },
+        {
+          "date": "2026-05-21",
+          "price": 991.4
+        },
+        {
+          "date": "2026-05-20",
+          "price": 984.98
+        },
+        {
+          "date": "2026-05-19",
+          "price": 998.0
+        },
+        {
+          "date": "2026-05-18",
+          "price": 999.69
+        },
+        {
+          "date": "2026-05-15",
+          "price": 1006.01
+        },
+        {
+          "date": "2026-05-14",
+          "price": 1028.68
+        },
+        {
+          "date": "2026-05-13",
+          "price": 1029.99
+        },
+        {
+          "date": "2026-05-12",
+          "price": 1028.51
+        },
+        {
+          "date": "2026-05-11",
+          "price": 1025.82
+        },
+        {
+          "date": "2026-05-08",
+          "price": 1032.0
         }
       ]
     },
-    {
-      "date": "2026-06-17",
-      "term": 7,
-      "total_amount": 4203,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 4203,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-16",
-      "term": 7,
-      "total_amount": 4495,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 4495,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-15",
-      "term": 7,
-      "total_amount": 4250,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 4250,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-12",
-      "term": 7,
-      "total_amount": 3930,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 3930,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-11",
-      "term": 7,
-      "total_amount": 1885,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 1885,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-10",
-      "term": 7,
-      "total_amount": 1590,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 1590,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-09",
-      "term": 7,
-      "total_amount": 1530,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 1530,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-08",
-      "term": 7,
-      "total_amount": 2185,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 2185,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-05",
-      "term": 7,
-      "total_amount": 2150,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 2150,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-02",
-      "term": 7,
-      "total_amount": 2,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 2,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-06-01",
-      "term": 7,
-      "total_amount": 110,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 110,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-05-29",
-      "term": 7,
-      "total_amount": 1230,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 1230,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-05-28",
-      "term": 7,
-      "total_amount": 1013,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 1013,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-05-27",
-      "term": 7,
-      "total_amount": 1776,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 1776,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-05-26",
-      "term": 7,
-      "total_amount": 2490,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 2490,
-          "rate": 1.4
-        }
-      ]
-    },
-    {
-      "date": "2026-05-25",
-      "term": 7,
-      "total_amount": 2580,
-      "rate": 1.4,
-      "ops_detail": [
-        {
-          "term": 7,
-          "amount": 2580,
-          "rate": 1.4
-        }
-      ]
+    "oil_cn": {
+      "latest": null
     }
-  ],
-  "daily": {
-    "2026-05-25": {
-      "operation": 2580,
-      "maturity": 0,
-      "net": 2580
+  },
+  "rates": {
+    "china_lpr": {
+      "latest": {
+        "date": "2026-05-20",
+        "lpr_1y": 3.0,
+        "lpr_5y": 3.5
+      },
+      "history": []
     },
-    "2026-05-26": {
-      "operation": 2490,
-      "maturity": 0,
-      "net": 2490
-    },
-    "2026-05-27": {
-      "operation": 1776,
-      "maturity": 0,
-      "net": 1776
-    },
-    "2026-05-28": {
-      "operation": 1013,
-      "maturity": 0,
-      "net": 1013
-    },
-    "2026-05-29": {
-      "operation": 1230,
-      "maturity": 0,
-      "net": 1230
-    },
-    "2026-06-01": {
-      "operation": 110,
-      "maturity": 2580,
-      "net": -2470
-    },
-    "2026-06-02": {
-      "operation": 2,
-      "maturity": 2490,
-      "net": -2488
-    },
-    "2026-06-03": {
-      "operation": 0,
-      "maturity": 1776,
-      "net": -1776
-    },
-    "2026-06-04": {
-      "operation": 0,
-      "maturity": 1013,
-      "net": -1013
-    },
-    "2026-06-05": {
-      "operation": 2150,
-      "maturity": 1230,
-      "net": 920
-    },
-    "2026-06-08": {
-      "operation": 2185,
-      "maturity": 110,
-      "net": 2075
-    },
-    "2026-06-09": {
-      "operation": 1530,
-      "maturity": 2,
-      "net": 1528
-    },
-    "2026-06-10": {
-      "operation": 1590,
-      "maturity": 0,
-      "net": 1590
-    },
-    "2026-06-11": {
-      "operation": 1885,
-      "maturity": 0,
-      "net": 1885
-    },
-    "2026-06-12": {
-      "operation": 3930,
-      "maturity": 2150,
-      "net": 1780
-    },
-    "2026-06-15": {
-      "operation": 4250,
-      "maturity": 2185,
-      "net": 2065
-    },
-    "2026-06-16": {
-      "operation": 4495,
-      "maturity": 1530,
-      "net": 2965
-    },
-    "2026-06-17": {
-      "operation": 4203,
-      "maturity": 1590,
-      "net": 2613
-    },
-    "2026-06-18": {
-      "operation": 2480,
-      "maturity": 1885,
-      "net": 595
-    },
-    "2026-06-19": {
-      "operation": 0,
-      "maturity": 3930,
-      "net": -3930
-    },
-    "2026-06-22": {
-      "operation": 0,
-      "maturity": 4250,
-      "net": -4250
-    },
-    "2026-06-23": {
-      "operation": 0,
-      "maturity": 4495,
-      "net": -4495
-    },
-    "2026-06-24": {
-      "operation": 0,
-      "maturity": 4203,
-      "net": -4203
-    },
-    "2026-06-25": {
-      "operation": 0,
-      "maturity": 2480,
-      "net": -2480
+    "us_treasury_5y": {
+      "latest": null
     }
+  },
+  "inflation": {
+    "china_cpi": {
+      "latest": {
+        "date": "2026年05月份",
+        "cpi_val": 101.2,
+        "cpi_yoy": 1.2,
+        "cpi_mom": -0.1
+      },
+      "history": [
+        {
+          "date": "2026年05月份",
+          "cpi_yoy": 1.2
+        },
+        {
+          "date": "2026年04月份",
+          "cpi_yoy": 1.2
+        },
+        {
+          "date": "2026年03月份",
+          "cpi_yoy": 1.0
+        },
+        {
+          "date": "2026年02月份",
+          "cpi_yoy": 1.3
+        },
+        {
+          "date": "2026年01月份",
+          "cpi_yoy": 0.2
+        },
+        {
+          "date": "2025年12月份",
+          "cpi_yoy": 0.8
+        },
+        {
+          "date": "2025年11月份",
+          "cpi_yoy": 0.7
+        },
+        {
+          "date": "2025年10月份",
+          "cpi_yoy": 0.2
+        },
+        {
+          "date": "2025年09月份",
+          "cpi_yoy": -0.3
+        },
+        {
+          "date": "2025年08月份",
+          "cpi_yoy": -0.4
+        },
+        {
+          "date": "2025年07月份",
+          "cpi_yoy": 0.0
+        },
+        {
+          "date": "2025年06月份",
+          "cpi_yoy": 0.1
+        }
+      ]
+    },
+    "china_ppi": {
+      "latest": {
+        "date": "2026年05月份",
+        "ppi_val": 103.9,
+        "ppi_yoy": 3.9
+      },
+      "history": [
+        {
+          "date": "2026年05月份",
+          "ppi_yoy": 3.9
+        },
+        {
+          "date": "2026年04月份",
+          "ppi_yoy": 2.8
+        },
+        {
+          "date": "2026年03月份",
+          "ppi_yoy": 0.5
+        },
+        {
+          "date": "2026年02月份",
+          "ppi_yoy": -0.9
+        },
+        {
+          "date": "2026年01月份",
+          "ppi_yoy": -1.4
+        },
+        {
+          "date": "2025年12月份",
+          "ppi_yoy": -1.9
+        },
+        {
+          "date": "2025年11月份",
+          "ppi_yoy": -2.2
+        },
+        {
+          "date": "2025年10月份",
+          "ppi_yoy": -2.1
+        },
+        {
+          "date": "2025年09月份",
+          "ppi_yoy": -2.3
+        },
+        {
+          "date": "2025年08月份",
+          "ppi_yoy": -2.9
+        },
+        {
+          "date": "2025年07月份",
+          "ppi_yoy": -3.6
+        },
+        {
+          "date": "2025年06月份",
+          "ppi_yoy": -3.6
+        }
+      ]
+    },
+    "us_cpi": {
+      "latest": null,
+      "history": []
+    }
+  },
+  "pmi": {
+    "china_mfg": {
+      "latest": {
+        "date": "2026年05月份",
+        "value": 50.0
+      },
+      "history": [
+        {
+          "date": "2026年05月份",
+          "value": 50.0
+        },
+        {
+          "date": "2026年04月份",
+          "value": 50.3
+        },
+        {
+          "date": "2026年03月份",
+          "value": 50.4
+        },
+        {
+          "date": "2026年02月份",
+          "value": 49.0
+        },
+        {
+          "date": "2026年01月份",
+          "value": 49.3
+        },
+        {
+          "date": "2025年12月份",
+          "value": 50.1
+        },
+        {
+          "date": "2025年11月份",
+          "value": 49.2
+        },
+        {
+          "date": "2025年10月份",
+          "value": 49.0
+        },
+        {
+          "date": "2025年09月份",
+          "value": 49.8
+        },
+        {
+          "date": "2025年08月份",
+          "value": 49.4
+        },
+        {
+          "date": "2025年07月份",
+          "value": 49.3
+        },
+        {
+          "date": "2025年06月份",
+          "value": 49.7
+        }
+      ]
+    },
+    "us_ism": {
+      "latest": null,
+      "history": []
+    }
+  },
+  "employment": {
+    "china_unemployment": {
+      "latest": null,
+      "history": []
+    },
+    "us_nonfarm": {
+      "latest": {
+        "date": "2025-09-05",
+        "value": NaN
+      },
+      "history": []
+    },
+    "us_unemployment_rate": {
+      "latest": {
+        "date": "2025-09-05",
+        "value": NaN
+      },
+      "history": []
+    }
+  },
+  "margin": {
+    "sse": {
+      "latest": {
+        "date": "20260618",
+        "rzye": 1495185799372.0,
+        "rzmre": 179607982680.0,
+        "rqye": 2444063656.0,
+        "rzrqye": 1509275177614.0
+      },
+      "history": [
+        {
+          "date": "20260618",
+          "rzye": 1495185799372.0,
+          "rzrqye": 1509275177614.0
+        },
+        {
+          "date": "20260617",
+          "rzye": 1488211916696.0,
+          "rzrqye": 1502500320708.0
+        },
+        {
+          "date": "20260616",
+          "rzye": 1473688751456.0,
+          "rzrqye": 1487995909920.0
+        },
+        {
+          "date": "20260615",
+          "rzye": 1461767264864.0,
+          "rzrqye": 1475832153687.0
+        },
+        {
+          "date": "20260612",
+          "rzye": 1448895770788.0,
+          "rzrqye": 1462764030547.0
+        },
+        {
+          "date": "20260611",
+          "rzye": 1448246655510.0,
+          "rzrqye": 1461907374181.0
+        },
+        {
+          "date": "20260610",
+          "rzye": 1447857826630.0,
+          "rzrqye": 1461669924206.0
+        },
+        {
+          "date": "20260609",
+          "rzye": 1452222353096.0,
+          "rzrqye": 1465993828068.0
+        },
+        {
+          "date": "20260608",
+          "rzye": 1453703702150.0,
+          "rzrqye": 1466993563569.0
+        },
+        {
+          "date": "20260605",
+          "rzye": 1465446567832.0,
+          "rzrqye": 1479050808316.0
+        },
+        {
+          "date": "20260604",
+          "rzye": 1476743330571.0,
+          "rzrqye": 1490330808700.0
+        },
+        {
+          "date": "20260603",
+          "rzye": 1474244276164.0,
+          "rzrqye": 1487944629259.0
+        },
+        {
+          "date": "20260602",
+          "rzye": 1469024532904.0,
+          "rzrqye": 1482523565744.0
+        },
+        {
+          "date": "20260601",
+          "rzye": 1468189116504.0,
+          "rzrqye": 1481710689190.0
+        },
+        {
+          "date": "20260529",
+          "rzye": 1472246436880.0,
+          "rzrqye": 1486200778125.0
+        },
+        {
+          "date": "20260528",
+          "rzye": 1489552701297.0,
+          "rzrqye": 1503680000601.0
+        },
+        {
+          "date": "20260527",
+          "rzye": 1486005873872.0,
+          "rzrqye": 1500129683646.0
+        },
+        {
+          "date": "20260526",
+          "rzye": 1484678273574.0,
+          "rzrqye": 1498903080635.0
+        },
+        {
+          "date": "20260525",
+          "rzye": 1480857012649.0,
+          "rzrqye": 1494990047103.0
+        },
+        {
+          "date": "20260522",
+          "rzye": 1468801309416.0,
+          "rzrqye": 1482512600575.0
+        },
+        {
+          "date": "20260521",
+          "rzye": 1467527516709.0,
+          "rzrqye": 1481236786313.0
+        },
+        {
+          "date": "20260520",
+          "rzye": 1470302212115.0,
+          "rzrqye": 1484276090075.0
+        },
+        {
+          "date": "20260519",
+          "rzye": 1465278698973.0,
+          "rzrqye": 1478892566420.0
+        },
+        {
+          "date": "20260518",
+          "rzye": 1462277198387.0,
+          "rzrqye": 1475613962653.0
+        },
+        {
+          "date": "20260515",
+          "rzye": 1452319161694.0,
+          "rzrqye": 1465556821448.0
+        },
+        {
+          "date": "20260514",
+          "rzye": 1456219229613.0,
+          "rzrqye": 1469831971600.0
+        },
+        {
+          "date": "20260513",
+          "rzye": 1452354118052.0,
+          "rzrqye": 1466140565117.0
+        },
+        {
+          "date": "20260512",
+          "rzye": 1440756886236.0,
+          "rzrqye": 1454439765327.0
+        },
+        {
+          "date": "20260511",
+          "rzye": 1432551019603.0,
+          "rzrqye": 1446197079834.0
+        },
+        {
+          "date": "20260508",
+          "rzye": 1416687834289.0,
+          "rzrqye": 1429914371758.0
+        }
+      ]
+    },
+    "szse": {
+      "latest": null,
+      "history": []
+    }
+  },
+  "money_supply": {
+    "latest": {
+      "date": "2026年05月份",
+      "m2_val": 3536688.9,
+      "m2_yoy": 8.6,
+      "m1_val": 0.17742027,
+      "m1_yoy": 1148891.41
+    },
+    "history": []
   }
 }

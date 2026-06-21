@@ -3,341 +3,463 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>央行逆回购操作日历</title>
+<title>中国金融市场数据看板</title>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js'></script>
 <style>
-  :root {
-    --bg: #f8fafc;
-    --card-bg: #ffffff;
-    --text: #1e293b;
-    --text-secondary: #64748b;
-    --border: #e2e8f0;
-    --operation: #3b82f6;
-    --maturity: #ef4444;
-    --net-positive: #22c55e;
-    --net-negative: #ef4444;
-    --today-ring: #3b82f6;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-  }
+:root {
+  --bg: #f1f5f9; --card: #ffffff; --text: #1e293b; --text2: #64748b;
+  --border: #e2e8f0; --blue: #3b82f6; --red: #ef4444; --green: #22c55e;
+  --orange: #f97316; --purple: #8b5cf6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
 
-  /* Header */
-  .header {
-    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
-    color: white;
-    padding: 20px 0;
-    text-align: center;
-  }
-  .header h1 { font-size: 1.6rem; font-weight: 700; }
-  .header .sub { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+/* Header */
+.header { background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%); color:#fff; padding:18px 0; text-align:center; }
+.header h1 { font-size:1.5rem; font-weight:700; }
+.header .sub { font-size:0.8rem; opacity:0.85; margin-top:2px; }
 
-  /* Summary Cards */
-  .summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 0 16px;
-  }
-  .card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 16px 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    text-align: center;
-  }
-  .card .label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 4px; }
-  .card .value { font-size: 1.6rem; font-weight: 700; }
-  .card .unit { font-size: 0.75rem; color: var(--text-secondary); }
-  .card.operation .value { color: var(--operation); }
-  .card.maturity .value { color: var(--maturity); }
-  .card.net .value.positive { color: var(--net-positive); }
-  .card.net .value.negative { color: var(--net-negative); }
-  .card.rate .value { color: #8b5cf6; }
+/* Tab Nav */
+.tab-nav { display:flex; gap:0; max-width:960px; margin:16px auto 0; padding:0 16px; overflow-x:auto; }
+.tab-nav button { flex:1; min-width:80px; padding:10px 8px; border:none; background:var(--card); color:var(--text2); font-size:0.82rem; cursor:pointer; border-bottom:3px solid transparent; transition:.2s; white-space:nowrap; }
+.tab-nav button:hover { color:var(--blue); }
+.tab-nav button.active { color:var(--blue); border-bottom-color:var(--blue); font-weight:700; }
 
-  /* Calendar */
-  .calendar-wrap {
-    max-width: 900px;
-    margin: 0 auto 40px;
-    padding: 0 16px;
-  }
-  #calendar {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
+/* Tab Content */
+.tab-wrap { max-width:960px; margin:0 auto 40px; padding:0 16px; }
+.tab-content { display:none; background:var(--card); border-radius:12px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.06); margin-top:12px; }
+.tab-content.active { display:block; }
 
-  /* FullCalendar overrides */
-  .fc {
-    --fc-border-color: var(--border);
-    --fc-today-bg-color: #eff6ff;
-    --fc-neutral-bg-color: #f8fafc;
-  }
-  .fc .fc-toolbar-title { font-size: 1.2rem !important; }
-  .fc .fc-button {
-    font-size: 0.85rem !important;
-    padding: 6px 12px !important;
-    border-radius: 8px !important;
-  }
-  .fc .fc-button-primary {
-    background: #2563eb !important;
-    border-color: #2563eb !important;
-  }
+/* Cards */
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
+.card { background:#f8fafc; border-radius:10px; padding:14px 16px; text-align:center; }
+.card .label { font-size:0.75rem; color:var(--text2); margin-bottom:2px; }
+.card .value { font-size:1.4rem; font-weight:700; }
+.card .unit { font-size:0.7rem; color:var(--text2); }
+.card .change { font-size:0.78rem; font-weight:600; }
+.change.up { color:var(--green); }
+.change.down { color:var(--red); }
+.card.blue .value { color:var(--blue); }
+.card.red .value { color:var(--red); }
+.card.green .value { color:var(--green); }
+.card.purple .value { color:var(--purple); }
 
-  /* Day cell content */
-  .day-content { font-size: 0.7rem; line-height: 1.3; padding: 2px 0; }
-  .day-op { color: var(--operation); font-weight: 600; }
-  .day-mat { color: var(--maturity); font-weight: 600; }
-  .day-net-pos { color: var(--net-positive); }
-  .day-net-neg { color: var(--net-negative); }
+/* Section title */
+.section-title { font-size:0.95rem; font-weight:700; color:var(--text); margin:16px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+.section-title:first-child { margin-top:0; }
 
-  /* Legend */
-  .legend {
-    max-width: 900px;
-    margin: 0 auto 20px;
-    padding: 0 16px;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-  }
-  .legend span { display: flex; align-items: center; gap: 4px; }
-  .legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .dot.op { background: var(--operation); }
-  .dot.mat { background: var(--maturity); }
+/* Tables */
+.data-table { width:100%; border-collapse:collapse; font-size:0.78rem; }
+.data-table th { background:#f1f5f9; padding:8px 10px; text-align:left; font-weight:600; border-bottom:2px solid var(--border); white-space:nowrap; }
+.data-table td { padding:7px 10px; border-bottom:1px solid var(--border); }
+.data-table .pos { color:var(--green); font-weight:600; }
+.data-table .neg { color:var(--red); font-weight:600; }
 
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-  }
-  .footer a { color: #2563eb; }
+/* Gauge */
+.gauge-wrap { text-align:center; padding:20px 0; }
+.gauge-bar { width:100%; max-width:500px; height:36px; margin:0 auto; border-radius:18px; position:relative; overflow:hidden; background:linear-gradient(to right,#ef4444 0%,#ef4444 25%,#eab308 25%,#eab308 45%,#94a3b8 45%,#94a3b8 55%,#22c55e 55%,#22c55e 75%,#ef4444 75%,#ef4444 100%); }
+.gauge-marker { position:absolute; top:-6px; width:4px; height:48px; background:#1e293b; border-radius:2px; transform:translateX(-50%); }
+.gauge-labels { display:flex; justify-content:space-between; max-width:500px; margin:8px auto 0; font-size:0.65rem; color:var(--text2); }
+.gauge-value { font-size:2.2rem; font-weight:700; margin:12px 0 4px; }
+.gauge-status { font-size:0.9rem; color:var(--text2); }
 
-  /* Mobile */
-  @media (max-width: 600px) {
-    .header h1 { font-size: 1.3rem; }
-    .summary { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .card { padding: 12px; }
-    .card .value { font-size: 1.3rem; }
-    .fc .fc-toolbar { flex-direction: column; gap: 8px; }
-  }
+/* Chart containers */
+.chart-box { position:relative; width:100%; max-height:300px; }
+.chart-row { display:grid; grid-template-columns:1.5fr 1fr; gap:16px; align-items:start; }
+@media (max-width:700px) { .chart-row { grid-template-columns:1fr; } }
+
+/* Empty state */
+.empty { text-align:center; padding:30px; color:var(--text2); font-size:0.85rem; }
+
+/* FullCalendar */
+.fc { --fc-border-color:var(--border); --fc-today-bg-color:#eff6ff; --fc-neutral-bg-color:#f8fafc; }
+.fc .fc-toolbar-title { font-size:1.1rem !important; }
+.fc .fc-button { font-size:0.82rem !important; padding:5px 10px !important; border-radius:8px !important; }
+.fc .fc-button-primary { background:#2563eb !important; border-color:#2563eb !important; }
+.fc-event { font-size:0.62rem !important; line-height:1.25 !important; padding:2px 4px !important; margin:0 1px 1px !important; border-radius:4px !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; }
+
+/* Legend */
+.legend { display:flex; gap:16px; flex-wrap:wrap; font-size:0.75rem; color:var(--text2); margin-top:8px; }
+.legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:4px; }
+.dot.op { background:var(--blue); }
+.dot.mat { background:var(--red); }
+
+/* Footer */
+.footer { text-align:center; padding:20px; font-size:0.72rem; color:var(--text2); }
+.footer a { color:#2563eb; }
+
+/* Status badge */
+.status-badge { display:inline-block; font-size:0.65rem; padding:2px 8px; border-radius:10px; margin-left:6px; }
+.status-badge.ok { background:#dcfce7; color:#15803d; }
+.status-badge.err { background:#fee2e2; color:#b91c1c; }
+
+@media (max-width:600px) {
+  .header h1 { font-size:1.2rem; }
+  .cards { grid-template-columns:repeat(2,1fr); gap:6px; }
+  .card { padding:10px; }
+  .card .value { font-size:1.1rem; }
+  .tab-nav button { font-size:0.72rem; padding:8px 6px; }
+}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>央行逆回购操作日历</h1>
-  <div class="sub">中国人民银行 · 公开市场业务交易公告 · 数据每日更新</div>
+  <h1>中国金融市场数据看板</h1>
+  <div class="sub" id="header-sub">数据每日 21:00 CST 更新</div>
 </div>
 
-<div class="summary" id="summary">
-  <div class="card operation">
-    <div class="label">今日操作量</div>
-    <div class="value" id="today-op">--</div>
-    <div class="unit">亿元</div>
-  </div>
-  <div class="card maturity">
-    <div class="label">今日到期量</div>
-    <div class="value" id="today-mat">--</div>
-    <div class="unit">亿元</div>
-  </div>
-  <div class="card net">
-    <div class="label">今日净投放</div>
-    <div class="value" id="today-net">--</div>
-    <div class="unit">亿元</div>
-  </div>
-  <div class="card rate">
-    <div class="label">最新操作利率</div>
-    <div class="value" id="latest-rate">--</div>
-    <div class="unit">%</div>
-  </div>
+<div class="tab-nav">
+  <button class="active" data-tab="repo">公开市场</button>
+  <button data-tab="forex">汇率利率</button>
+  <button data-tab="futures">期货大宗</button>
+  <button data-tab="sentiment">市场情绪</button>
+  <button data-tab="macro">宏观经济</button>
 </div>
 
-<div class="legend">
-  <span><span class="dot op"></span> 操作（投放）</span>
-  <span><span class="dot mat"></span> 到期（回笼）</span>
-</div>
+<div class="tab-wrap">
+  <!-- TAB 1: 公开市场 -->
+  <div class="tab-content active" id="tab-repo">
+    <div class="cards" id="repo-cards"></div>
+    <div class="legend">
+      <span><span class="dot op"></span>操作(投放)</span>
+      <span><span class="dot mat"></span>到期(回笼)</span>
+    </div>
+    <div id="calendar"></div>
+  </div>
 
-<div class="calendar-wrap">
-  <div id="calendar"></div>
+  <!-- TAB 2: 汇率利率 -->
+  <div class="tab-content" id="tab-forex">
+    <div class="chart-row">
+      <div><div class="section-title">人民币汇率走势 (CNH)</div><div class="chart-box"><canvas id="chart-forex"></canvas></div></div>
+      <div>
+        <div class="cards" style="grid-template-columns:1fr;" id="cards-forex"></div>
+        <div class="cards" style="grid-template-columns:1fr;" id="cards-rates"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: 期货大宗 -->
+  <div class="tab-content" id="tab-futures">
+    <div class="section-title">大宗商品</div>
+    <div class="cards" id="cards-commodities"></div>
+    <div class="section-title">中信期货持仓</div>
+    <div id="futures-table"></div>
+  </div>
+
+  <!-- TAB 4: 市场情绪 -->
+  <div class="tab-content" id="tab-sentiment">
+    <div class="gauge-wrap" id="sentiment-gauge"></div>
+    <div class="section-title">近期情绪变化</div>
+    <div id="sentiment-history"></div>
+  </div>
+
+  <!-- TAB 5: 宏观经济 -->
+  <div class="tab-content" id="tab-macro">
+    <div class="section-title">通胀数据</div>
+    <div class="cards" id="cards-inflation"></div>
+    <div class="section-title">景气度 (PMI)</div>
+    <div class="cards" id="cards-pmi"></div>
+    <div class="section-title">就业数据</div>
+    <div class="cards" id="cards-employment"></div>
+    <div class="section-title">流动性与货币</div>
+    <div class="cards" id="cards-liquidity"></div>
+  </div>
 </div>
 
 <div class="footer">
-  数据来源: <a href="http://www.pbc.gov.cn/zhengcehuobisi/125207/125213/125431/125475/" target="_blank">中国人民银行 · 公开市场业务交易公告</a>
-  &nbsp;|&nbsp; 每日 18:00 CST 自动更新
+  数据来源: 中国人民银行 · 公开市场业务 &nbsp;|&nbsp; 每天 21:00 CST 更新
   &nbsp;|&nbsp; Powered by <a href="https://github.com/akfamily/akshare" target="_blank">AKShare</a>
 </div>
 
 <script>
 // ============================================================
-// Load & Render Data
+// Bootstrap
 // ============================================================
-async function loadData() {
+let D = null;
+let calendars = {};
+let charts = {};
+
+async function init() {
   try {
-    const resp = await fetch('data.json');
-    return await resp.json();
-  } catch(e) {
-    console.error('Failed to load data:', e);
-    return null;
-  }
+    const resp = await fetch('data.json?' + Date.now());
+    D = await resp.json();
+  } catch(e) { console.error('Load failed:', e); D = null; }
+
+  document.getElementById('header-sub').textContent =
+    '数据每日 21:00 CST 更新 · 更新于 ' + (D ? D.updated_at : '--');
+
+  renderAll();
+  setupTabs();
 }
 
-function getToday() {
-  return new Date().toISOString().split('T')[0];
+function setupTabs() {
+  document.querySelectorAll('.tab-nav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      // Redraw calendar/charts on tab switch
+      if (btn.dataset.tab === 'repo') resizeCalendar();
+    });
+  });
 }
 
-function renderSummary(data) {
-  if (!data || !data.daily) return;
-  const today = getToday();
-  const todayData = data.daily[today];
+function fmt(n, d=2) {
+  if (n === null || n === undefined || isNaN(n)) return '--';
+  return Number(n).toLocaleString('zh-CN', {minimumFractionDigits:d, maximumFractionDigits:d});
+}
+function fmtInt(n) { return fmt(n, 0); }
+function fmtB(n) { return fmt(n/100000000, 2) + '亿'; }
+function chgCls(v) { return v > 0 ? 'up' : v < 0 ? 'down' : ''; }
+function chgSign(v) { return v > 0 ? '+' + fmt(v,2) : fmt(v,2); }
+function statusBadge(ok) { return ok==='ok' ? '<span class="status-badge ok">正常</span>' : '<span class="status-badge err">异常</span>'; }
 
-  if (todayData) {
-    document.getElementById('today-op').textContent = todayData.operation;
-    document.getElementById('today-mat').textContent = todayData.maturity;
-    const netEl = document.getElementById('today-net');
-    netEl.textContent = (todayData.net >= 0 ? '+' : '') + todayData.net;
-    netEl.className = 'value ' + (todayData.net >= 0 ? 'positive' : 'negative');
-  } else {
-    document.getElementById('today-op').textContent = '--';
-    document.getElementById('today-mat').textContent = '--';
-    document.getElementById('today-net').textContent = '--';
-  }
-
-  // Latest rate
-  if (data.records && data.records.length > 0) {
-    document.getElementById('latest-rate').textContent = data.records[0].rate.toFixed(2);
-  }
+function renderAll() {
+  renderRepo();
+  renderForex();
+  renderFutures();
+  renderSentiment();
+  renderMacro();
 }
 
-function renderCalendar(data) {
-  if (!data) return;
+// ============================================================
+// TAB 1: 公开市场
+// ============================================================
+function renderRepo() {
+  if (!D || !D.reverse_repo) { document.getElementById('repo-cards').innerHTML = '<div class="empty">暂无数据</div>'; return; }
+  const rr = D.reverse_repo;
+  const today = new Date().toISOString().split('T')[0];
+  const td = (rr.daily && rr.daily[today]) ? rr.daily[today] : {operation:0, maturity:0, net:0};
+  const rate = rr.records && rr.records.length > 0 ? rr.records[0].rate : '--';
 
-  const calendarEl = document.getElementById('calendar');
+  document.getElementById('repo-cards').innerHTML = [
+    {l:'今日操作量', v:fmtInt(td.operation), u:'亿元', c:'blue'},
+    {l:'今日到期量', v:fmtInt(td.maturity), u:'亿元', c:'red'},
+    {l:'今日净投放', v:(td.net>=0?'+':'')+fmtInt(td.net), u:'亿元', c:td.net>=0?'green':'red'},
+    {l:'最新操作利率', v:typeof rate==='number'?rate.toFixed(2):rate, u:'%', c:'purple'},
+  ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
+
+  // Calendar
   const events = [];
-
-  // Build events from daily data
-  if (data.daily) {
-    for (const [date, d] of Object.entries(data.daily)) {
-      if (d.operation > 0) {
-        events.push({
-          title: `投放 ${d.operation}亿`,
-          start: date,
-          allDay: true,
-          backgroundColor: '#3b82f6',
-          borderColor: '#3b82f6',
-          textColor: '#fff',
-          extendedProps: { type: 'operation', amount: d.operation }
-        });
-      }
-      if (d.maturity > 0) {
-        // Only show maturity on days with no operation (to avoid clutter)
-        if (d.operation === 0) {
-          events.push({
-            title: `到期 ${d.maturity}亿`,
-            start: date,
-            allDay: true,
-            backgroundColor: '#fecaca',
-            borderColor: '#ef4444',
-            textColor: '#991b1b',
-            extendedProps: { type: 'maturity', amount: d.maturity }
-          });
-        }
-      }
-    }
-  }
-
-  // For days with BOTH operation and maturity, create a combined event
-  const combinedEvents = [];
-  if (data.daily) {
-    for (const [date, d] of Object.entries(data.daily)) {
+  const combinedDates = new Set();
+  if (rr.daily) {
+    for (const [date, d] of Object.entries(rr.daily)) {
       if (d.operation > 0 && d.maturity > 0) {
-        const net = d.net;
-        const netLabel = net >= 0 ? `+${net}` : `${net}`;
-        combinedEvents.push({
-          title: `投放${d.operation}亿 到期${d.maturity}亿`,
-          start: date,
-          allDay: true,
-          backgroundColor: net >= 0 ? '#22c55e' : '#f97316',
-          borderColor: net >= 0 ? '#16a34a' : '#ea580c',
-          textColor: '#fff',
-          extendedProps: { type: 'both', operation: d.operation, maturity: d.maturity, net: net }
-        });
+        combinedDates.add(date);
+        const bg = d.net >= 0 ? '#22c55e' : '#f97316';
+        const bd = d.net >= 0 ? '#16a34a' : '#ea580c';
+        events.push({ title: `${d.operation}亿 / ${d.maturity}亿`, start:date, allDay:true, backgroundColor:bg, borderColor:bd, textColor:'#fff', extendedProps:{op:d.operation, mat:d.maturity, net:d.net} });
+      }
+    }
+    for (const [date, d] of Object.entries(rr.daily)) {
+      if (combinedDates.has(date)) continue;
+      if (d.operation > 0) {
+        events.push({ title: `${d.operation}亿`, start:date, allDay:true, backgroundColor:'#3b82f6', borderColor:'#3b82f6', textColor:'#fff', extendedProps:{op:d.operation, mat:0, net:d.net} });
+      } else if (d.maturity > 0) {
+        events.push({ title: `${d.maturity}亿`, start:date, allDay:true, backgroundColor:'#fecaca', borderColor:'#ef4444', textColor:'#991b1b', extendedProps:{op:0, mat:d.maturity, net:d.net} });
       }
     }
   }
 
-  // Remove original events that overlap with combined ones
-  const combinedDates = new Set(combinedEvents.map(e => e.start));
-  const filtered = events.filter(e => !combinedDates.has(e.start));
-
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    locale: 'zh-cn',
-    firstDay: 1,
-    height: 'auto',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,dayGridWeek'
-    },
-    buttonText: {
-      today: '今天',
-      month: '月',
-      week: '周'
-    },
-    events: [...filtered, ...combinedEvents],
-    eventDisplay: 'block',
-    dayMaxEvents: 3,
-    // Tooltip on hover
+  const calEl = document.getElementById('calendar');
+  if (calendars.repo) calendars.repo.destroy();
+  calendars.repo = new FullCalendar.Calendar(calEl, {
+    initialView:'dayGridMonth', locale:'zh-cn', firstDay:1, height:'auto',
+    headerToolbar:{ left:'prev,next today', center:'title', right:'dayGridMonth,dayGridWeek' },
+    buttonText:{ today:'今天', month:'月', week:'周' },
+    events, eventDisplay:'block', dayMaxEvents:5,
     eventDidMount: function(info) {
-      const props = info.event.extendedProps;
-      let tooltip = '';
-      if (props.type === 'operation') {
-        tooltip = `操作量: ${props.amount}亿元`;
-      } else if (props.type === 'maturity') {
-        tooltip = `到期量: ${props.amount}亿元`;
-      } else if (props.type === 'both') {
-        tooltip = `操作: ${props.operation}亿元\n到期: ${props.maturity}亿元\n净投放: ${props.net >= 0 ? '+' : ''}${props.net}亿元`;
-      }
-      info.el.title = tooltip;
-    },
-    // Custom day cell rendering for non-event days
-    dayCellDidMount: function(info) {
-      const dateStr = info.date.toISOString().split('T')[0];
-      if (data.daily && data.daily[dateStr]) {
-        const d = data.daily[dateStr];
-        if (!combinedDates.has(dateStr) && d.maturity > 0 && d.operation > 0) {
-          // Already covered by combined events
-        }
-      }
+      const p = info.event.extendedProps;
+      let t = info.event.startStr;
+      if (p.op > 0) t += `\n操作: ${p.op}亿元`;
+      if (p.mat > 0) t += `\n到期: ${p.mat}亿元`;
+      if (p.op > 0 && p.mat > 0) t += `\n净投放: ${p.net >= 0 ? '+' : ''}${p.net}亿元`;
+      info.el.title = t;
     }
   });
-
-  calendar.render();
+  calendars.repo.render();
 }
 
-// Init
-(async function() {
-  const data = await loadData();
-  renderSummary(data);
-  renderCalendar(data);
+function resizeCalendar() { if (calendars.repo) setTimeout(() => calendars.repo.updateSize(), 100); }
 
-  // Show update time
-  if (data && data.updated_at) {
-    const el = document.querySelector('.header .sub');
-    el.textContent += ' · 更新于 ' + data.updated_at;
+// ============================================================
+// TAB 2: 汇率利率
+// ============================================================
+function renderForex() {
+  const fx = D ? (D.forex || {}) : {};
+  const rt = D ? (D.rates || {}) : {};
+
+  // Forex cards
+  const cnh = (fx.cnh && fx.cnh.latest) ? fx.cnh.latest : {};
+  const cny = (fx.cny && fx.cny.latest) ? fx.cny.latest : {};
+  document.getElementById('cards-forex').innerHTML = [
+    {l:'离岸人民币(CNH)', v:cnh.price ? cnh.price.toFixed(4) : '--', u:'USD/CNH', c:'blue'},
+    {l:'在岸人民币(CNY)', v:cny.price ? cny.price.toFixed(4) : '--', u:'中行折算价', c:'red'},
+  ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
+
+  // Rate cards
+  const lpr = (rt.china_lpr && rt.china_lpr.latest) ? rt.china_lpr.latest : {};
+  const us5 = (rt.us_treasury_5y && rt.us_treasury_5y.latest) ? rt.us_treasury_5y.latest : {};
+  document.getElementById('cards-rates').innerHTML = [
+    {l:'中国LPR 1年期', v:lpr.lpr_1y !== null ? lpr.lpr_1y + '%' : '--', u:lpr.date || '', c:'purple'},
+    {l:'中国LPR 5年期', v:lpr.lpr_5y !== null ? lpr.lpr_5y + '%' : '--', u:lpr.date || '', c:'purple'},
+    {l:'美国5年期国债', v:us5.yield !== undefined ? us5.yield + '%' : '--', u:us5.date || '', c:'blue'},
+  ].map(c => `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
+
+  // Simple forex chart placeholder (CNH history not available in this version)
+  const ctx = document.getElementById('chart-forex');
+  if (!ctx) return;
+  if (charts.forex) charts.forex.destroy();
+  const labels = D && D.reverse_repo && D.reverse_repo.daily ? Object.keys(D.reverse_repo.daily).slice(-30) : [];
+  charts.forex = new Chart(ctx, {
+    type:'line', data:{ labels, datasets:[] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ title:{ display:true, text:'汇率图表（需数据源支持）' } }
+    }
+  });
+}
+
+// ============================================================
+// TAB 3: 期货大宗
+// ============================================================
+function renderFutures() {
+  const comm = D ? (D.commodities || {}) : {};
+  const fut = D ? (D.futures || {}) : {};
+
+  // Commodity cards
+  const g = (comm.gold && comm.gold.latest) ? comm.gold.latest : {};
+  const oil = (comm.oil_cn && comm.oil_cn.latest) ? comm.oil_cn.latest : {};
+  document.getElementById('cards-commodities').innerHTML = [
+    {l:'黄金 Au99.99', v:g.price ? g.price.toFixed(2) : '--', u:'元/克', chg:g.change_pct, c:'gold'},
+    {l:'国内原油期货', v:oil.price ? oil.price.toFixed(1) : '--', u:'元/桶', chg:oil.change_pct, c:'oil'},
+  ].map(c => {
+    const cl = c.chg !== undefined ? chgCls(c.chg) : '';
+    return `<div class="card ${c.c}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div>${c.chg !== undefined ? '<div class="change '+cl+'">'+chgSign(c.chg)+'%</div>' : ''}</div>`;
+  }).join('');
+
+  // Futures table
+  let ftHTML = '';
+  const exchanges = ['shfe','cffex','dce','czce'];
+  const exNames = {shfe:'上期所', cffex:'中金所', dce:'大商所', czce:'郑商所'};
+  let allProds = [];
+  for (const ex of exchanges) {
+    const exData = fut[ex];
+    if (exData && exData.products) {
+      for (const p of exData.products) {
+        allProds.push({...p, exchange: exNames[ex] || ex});
+      }
+    }
   }
-})();
+  if (allProds.length > 0) {
+    ftHTML = '<table class="data-table"><thead><tr><th>交易所</th><th>会员</th><th>品种</th><th>多头持仓</th><th>多头增减</th><th>空头持仓</th><th>空头增减</th><th>净持仓</th></tr></thead><tbody>';
+    for (const p of allProds) {
+      const netCls = p.net > 0 ? 'pos' : p.net < 0 ? 'neg' : '';
+      ftHTML += `<tr><td>${p.exchange}</td><td>${p.member}</td><td>${p.product}</td><td>${fmtInt(p.long_vol)}</td><td class="${chgCls(p.long_chg)}">${chgSign(p.long_chg)}</td><td>${fmtInt(p.short_vol)}</td><td class="${chgCls(p.short_chg)}">${chgSign(p.short_chg)}</td><td class="${netCls}">${fmtInt(p.net)}</td></tr>`;
+    }
+    ftHTML += '</tbody></table>';
+  } else {
+    ftHTML = '<div class="empty">今日无中信期货持仓数据（非交易日或数据未更新）</div>';
+  }
+  document.getElementById('futures-table').innerHTML = ftHTML;
+}
+
+// ============================================================
+// TAB 4: 市场情绪
+// ============================================================
+function renderSentiment() {
+  const sent = D ? (D.sentiment || {}) : {};
+  const latest = sent.latest || {};
+  const hist = sent.history || [];
+  const val = latest.value || 50;
+  const status = latest.status || '中性';
+
+  let statusColor = '#94a3b8';
+  if (status.includes('极度恐惧')) statusColor = '#dc2626';
+  else if (status.includes('恐惧')) statusColor = '#ef4444';
+  else if (status.includes('贪婪')) statusColor = '#16a34a';
+  else if (status.includes('极度贪婪')) statusColor = '#15803d';
+
+  document.getElementById('sentiment-gauge').innerHTML = `
+    <div class="gauge-bar"><div class="gauge-marker" style="left:${Math.max(0,Math.min(100,val))}%"></div></div>
+    <div class="gauge-labels"><span>极度恐惧</span><span>恐惧</span><span>中性</span><span>贪婪</span><span>极度贪婪</span></div>
+    <div class="gauge-value" style="color:${statusColor}">${fmt(val,1)}</div>
+    <div class="gauge-status">${status}${latest.note ? ' <small>('+latest.note+')</small>' : ''}</div>
+  `;
+
+  if (hist.length > 0) {
+    let ht = '<table class="data-table"><thead><tr><th>日期</th><th>情绪值</th><th>状态</th></tr></thead><tbody>';
+    for (const h of hist.slice(0,10)) {
+      let st = '中性';
+      if (h.value <= 25) st = '极度恐惧';
+      else if (h.value <= 45) st = '恐惧';
+      else if (h.value <= 55) st = '中性';
+      else if (h.value <= 75) st = '贪婪';
+      else st = '极度贪婪';
+      ht += `<tr><td>${h.date}</td><td>${fmt(h.value,1)}</td><td>${st}</td></tr>`;
+    }
+    ht += '</tbody></table>';
+    document.getElementById('sentiment-history').innerHTML = ht;
+  } else {
+    document.getElementById('sentiment-history').innerHTML = '<div class="empty">暂无历史数据</div>';
+  }
+}
+
+// ============================================================
+// TAB 5: 宏观经济
+// ============================================================
+function renderMacro() {
+  const inf = D ? (D.inflation || {}) : {};
+  const pmi = D ? (D.pmi || {}) : {};
+  const emp = D ? (D.employment || {}) : {};
+  const mg = D ? (D.margin || {}) : {};
+  const ms = D ? (D.money_supply || {}) : {};
+
+  // Inflation cards
+  const cpi = (inf.china_cpi && inf.china_cpi.latest) ? inf.china_cpi.latest : {};
+  const ppi = (inf.china_ppi && inf.china_ppi.latest) ? inf.china_ppi.latest : {};
+  const uscpi = (inf.us_cpi && inf.us_cpi.latest) ? inf.us_cpi.latest : {};
+  document.getElementById('cards-inflation').innerHTML = [
+    {l:'中国CPI', v:cpi.cpi_yoy !== undefined ? cpi.cpi_yoy+'%' : '--', u:cpi.date || '', sub:'同比'},
+    {l:'中国PPI', v:ppi.ppi_yoy !== undefined ? ppi.ppi_yoy+'%' : '--', u:ppi.date || '', sub:'同比'},
+    {l:'美国CPI', v:uscpi.cpi_yoy !== undefined ? uscpi.cpi_yoy+'%' : '--', u:uscpi.date || '', sub:'同比'},
+  ].map(c => `<div class="card"><div class="label">${c.l} <small>(${c.sub})</small></div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
+
+  // PMI cards
+  const cpm = (pmi.china_mfg && pmi.china_mfg.latest) ? pmi.china_mfg.latest : {};
+  const upm = (pmi.us_ism && pmi.us_ism.latest) ? pmi.us_ism.latest : {};
+  document.getElementById('cards-pmi').innerHTML = [
+    {l:'中国制造业PMI', v:cpm.value !== undefined ? fmt(cpm.value,1) : '--', u:cpm.date || '', note:cpm.value >= 50 ? '扩张' : cpm.value ? '收缩' : ''},
+    {l:'美国ISM制造业PMI', v:upm.value !== undefined ? fmt(upm.value,1) : '--', u:upm.date||'', note:upm.value >= 50 ? '扩张' : upm.value ? '收缩' : ''},
+  ].map(c => `<div class="card"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}${c.note ? ' · '+c.note : ''}</div></div>`).join('');
+
+  // Employment cards
+  const cun = (emp.china_unemployment && emp.china_unemployment.latest) ? emp.china_unemployment.latest : {};
+  const unf = (emp.us_nonfarm && emp.us_nonfarm.latest) ? emp.us_nonfarm.latest : {};
+  const uur = (emp.us_unemployment_rate && emp.us_unemployment_rate.latest) ? emp.us_unemployment_rate.latest : {};
+  document.getElementById('cards-employment').innerHTML = [
+    {l:'中国城镇调查失业率', v:cun.value !== undefined ? cun.value+'%' : '--', u:cun.date||''},
+    {l:'美国非农就业', v:unf.value !== undefined ? fmt(unf.value,1)+'万' : '--', u:unf.date||''},
+    {l:'美国失业率', v:uur.value !== undefined ? uur.value+'%' : '--', u:uur.date||''},
+  ].map(c => `<div class="card"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
+
+  // Liquidity cards
+  const ml = ms.latest || {};
+  const sseM = (mg.sse && mg.sse.latest) ? mg.sse.latest : {};
+  const szseM = (mg.szse && mg.szse.latest) ? mg.szse.latest : {};
+  const totalMargin = (sseM.rzrqye || 0) + (szseM.rzrqye || 0);
+  const m2Val = ml.m2_val ? (ml.m2_val / 10000).toFixed(1) : '--';
+  document.getElementById('cards-liquidity').innerHTML = [
+    {l:'M2货币供应量', v:m2Val, u:'万亿'+(ml.m2_yoy !== undefined ? ' · '+ml.m2_yoy+'% YoY' : ''), c:'purple'},
+    {l:'M1货币供应量', v:ml.m1_val !== undefined ? fmt(ml.m1_val,0) : '--', u:'亿元'+(ml.m1_yoy !== undefined ? ' · '+ml.m1_yoy+'% YoY' : ''), c:'blue'},
+    {l:'A股两融余额', v:totalMargin > 0 ? (totalMargin/100000000).toFixed(2)+'亿' : '--', u:'沪深合计', c:totalMargin > 0 ? 'green' : ''},
+  ].map(c => `<div class="card ${c.c||''}"><div class="label">${c.l}</div><div class="value">${c.v}</div><div class="unit">${c.u}</div></div>`).join('');
+}
+
+// Start
+init();
 </script>
 </body>
 </html>
