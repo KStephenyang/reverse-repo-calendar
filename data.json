@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-04T22:38:58+08:00",
+  "updated_at": "2026-07-05T22:45:07+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -676,14 +676,14 @@
           "price": 6.7814
         }
       ],
-      "date": "2026-07-04"
+      "date": "2026-07-05"
     },
     "cny": {
       "latest": {
         "price": 6.8047,
         "change_pct": 0
       },
-      "date": "2026-07-04"
+      "date": "2026-07-05"
     }
   },
   "futures": {
