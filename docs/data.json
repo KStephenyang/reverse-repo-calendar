@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-16T21:32:45+08:00",
+  "updated_at": "2026-08-17T21:39:51+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -1144,14 +1144,14 @@
           "price": 6.7413
         }
       ],
-      "date": "2026-08-16"
+      "date": "2026-08-17"
     },
     "cny": {
       "latest": {
-        "price": 6.7878,
+        "price": 6.7873,
         "change_pct": 0
       },
-      "date": "2026-08-16"
+      "date": "2026-08-17"
     }
   },
   "futures": {
@@ -1174,7 +1174,7 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-08-14",
+      "date": "2026-08-17",
       "value": 100,
       "status": "极度贪婪",
       "note": "基于沪深300估值推算"
@@ -1184,11 +1184,15 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-08-14",
-        "price": 940.72,
-        "change_pct": -0.9
+        "date": "2026-08-17",
+        "price": 952.44,
+        "change_pct": 1.25
       },
       "history": [
+        {
+          "date": "2026-08-17",
+          "price": 952.44
+        },
         {
           "date": "2026-08-14",
           "price": 940.72
@@ -1304,18 +1308,14 @@
         {
           "date": "2026-07-07",
           "price": 902.57
-        },
-        {
-          "date": "2026-07-06",
-          "price": 907.77
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-08-14",
-        "price": 556.2,
-        "change_pct": 0.49
+        "date": "2026-08-17",
+        "price": 561.6,
+        "change_pct": 0.97
       }
     }
   },
@@ -1329,10 +1329,7 @@
       "history": []
     },
     "us_treasury_5y": {
-      "latest": {
-        "date": "2026-08-14",
-        "yield": 4.36
-      }
+      "latest": null
     }
   },
   "inflation": {
