@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-19T21:44:52+08:00",
+  "updated_at": "2026-08-20T21:48:30+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -1019,14 +1019,10 @@
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.7423,
+        "price": 6.7382,
         "change_pct": 0
       },
       "history": [
-        {
-          "date": "2026-07-08",
-          "price": 6.8002
-        },
         {
           "date": "2026-07-09",
           "price": 6.796
@@ -1142,16 +1138,20 @@
         {
           "date": "2026-08-18",
           "price": 6.7423
+        },
+        {
+          "date": "2026-08-19",
+          "price": 6.7382
         }
       ],
-      "date": "2026-08-19"
+      "date": "2026-08-20"
     },
     "cny": {
       "latest": {
-        "price": 6.785399999999999,
+        "price": 6.7808,
         "change_pct": 0
       },
-      "date": "2026-08-19"
+      "date": "2026-08-20"
     }
   },
   "futures": {
@@ -1174,7 +1174,7 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-08-19",
+      "date": "2026-08-20",
       "value": 100,
       "status": "极度贪婪",
       "note": "基于沪深300估值推算"
@@ -1184,11 +1184,15 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-08-19",
-        "price": 945.22,
-        "change_pct": -1.04
+        "date": "2026-08-20",
+        "price": 968.14,
+        "change_pct": 2.42
       },
       "history": [
+        {
+          "date": "2026-08-20",
+          "price": 968.14
+        },
         {
           "date": "2026-08-19",
           "price": 945.22
@@ -1304,25 +1308,21 @@
         {
           "date": "2026-07-10",
           "price": 897.25
-        },
-        {
-          "date": "2026-07-09",
-          "price": 898.79
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-08-19",
-        "price": 585.8,
-        "change_pct": 0.17
+        "date": "2026-08-20",
+        "price": 583.4,
+        "change_pct": -0.41
       }
     }
   },
   "rates": {
     "china_lpr": {
       "latest": {
-        "date": "2026-07-20",
+        "date": "2026-08-20",
         "lpr_1y": 3.0,
         "lpr_5y": 3.5
       },
