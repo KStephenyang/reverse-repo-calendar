@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-23T21:33:15+08:00",
+  "updated_at": "2026-08-24T21:53:02+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -18,6 +18,19 @@
   },
   "reverse_repo": {
     "records": [
+      {
+        "date": "2026-08-24",
+        "term": 7,
+        "total_amount": 3400,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 3400,
+            "rate": 1.4
+          }
+        ]
+      },
       {
         "date": "2026-08-21",
         "term": 7,
@@ -1032,10 +1045,20 @@
         "maturity": 0,
         "net": 950
       },
+      "2026-08-24": {
+        "operation": 3400,
+        "maturity": 0,
+        "net": 3400
+      },
       "2026-08-28": {
         "operation": 0,
         "maturity": 950,
         "net": -950
+      },
+      "2026-08-31": {
+        "operation": 0,
+        "maturity": 3400,
+        "net": -3400
       }
     }
   },
@@ -1167,14 +1190,14 @@
           "price": 6.7206
         }
       ],
-      "date": "2026-08-23"
+      "date": "2026-08-24"
     },
     "cny": {
       "latest": {
-        "price": 6.7817,
+        "price": 6.7841,
         "change_pct": 0
       },
-      "date": "2026-08-23"
+      "date": "2026-08-24"
     }
   },
   "futures": {
@@ -1197,7 +1220,7 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-08-21",
+      "date": "2026-08-24",
       "value": 100,
       "status": "极度贪婪",
       "note": "基于沪深300估值推算"
@@ -1207,11 +1230,15 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-08-21",
-        "price": 983.56,
-        "change_pct": 1.59
+        "date": "2026-08-24",
+        "price": 1004.21,
+        "change_pct": 2.1
       },
       "history": [
+        {
+          "date": "2026-08-24",
+          "price": 1004.21
+        },
         {
           "date": "2026-08-21",
           "price": 983.56
@@ -1327,18 +1354,14 @@
         {
           "date": "2026-07-14",
           "price": 879.9
-        },
-        {
-          "date": "2026-07-13",
-          "price": 886.46
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-08-21",
-        "price": 592.9,
-        "change_pct": 1.63
+        "date": "2026-08-24",
+        "price": 587.8,
+        "change_pct": -0.86
       }
     }
   },
@@ -1352,10 +1375,7 @@
       "history": []
     },
     "us_treasury_5y": {
-      "latest": {
-        "date": "2026-08-21",
-        "yield": 4.43
-      }
+      "latest": null
     }
   },
   "inflation": {
