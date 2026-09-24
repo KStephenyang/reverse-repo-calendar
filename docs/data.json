@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-09-20T00:17:33+08:00",
+  "updated_at": "2026-09-25T01:46:34+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
-    "futures": "error",
+    "futures": "ok",
     "sentiment": "ok",
     "commodities": "ok",
     "rates": "ok",
@@ -13,11 +13,74 @@
     "margin": "ok",
     "money_supply": "ok"
   },
-  "fetch_errors": {
-    "futures": "AttributeError: 'dict' object has no attribute 'columns'"
-  },
+  "fetch_errors": {},
   "reverse_repo": {
     "records": [
+      {
+        "date": "2026-09-24",
+        "term": 7,
+        "total_amount": 515,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 515,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-09-23",
+        "term": 7,
+        "total_amount": 80,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 80,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-09-22",
+        "term": 7,
+        "total_amount": 350,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 350,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-09-21",
+        "term": 7,
+        "total_amount": 1650,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 1650,
+            "rate": 1.4
+          }
+        ]
+      },
+      {
+        "date": "2026-09-20",
+        "term": 7,
+        "total_amount": 320,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 320,
+            "rate": 1.4
+          }
+        ]
+      },
       {
         "date": "2026-09-18",
         "term": 7,
@@ -1314,46 +1377,70 @@
         "maturity": 40,
         "net": 5593
       },
+      "2026-09-20": {
+        "operation": 320,
+        "maturity": 0,
+        "net": 320
+      },
+      "2026-09-21": {
+        "operation": 1650,
+        "maturity": 0,
+        "net": 1650
+      },
+      "2026-09-22": {
+        "operation": 350,
+        "maturity": 0,
+        "net": 350
+      },
       "2026-09-23": {
-        "operation": 0,
+        "operation": 80,
         "maturity": 1100,
-        "net": -1100
+        "net": -1020
       },
       "2026-09-24": {
-        "operation": 0,
+        "operation": 515,
         "maturity": 1620,
-        "net": -1620
+        "net": -1105
       },
       "2026-09-25": {
         "operation": 0,
         "maturity": 5633,
         "net": -5633
+      },
+      "2026-09-27": {
+        "operation": 0,
+        "maturity": 320,
+        "net": -320
+      },
+      "2026-09-28": {
+        "operation": 0,
+        "maturity": 1650,
+        "net": -1650
+      },
+      "2026-09-29": {
+        "operation": 0,
+        "maturity": 350,
+        "net": -350
+      },
+      "2026-09-30": {
+        "operation": 0,
+        "maturity": 80,
+        "net": -80
+      },
+      "2026-10-01": {
+        "operation": 0,
+        "maturity": 515,
+        "net": -515
       }
     }
   },
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.6976,
+        "price": 6.7126,
         "change_pct": 0
       },
       "history": [
-        {
-          "date": "2026-08-10",
-          "price": 6.7444
-        },
-        {
-          "date": "2026-08-11",
-          "price": 6.7453
-        },
-        {
-          "date": "2026-08-12",
-          "price": 6.7432
-        },
-        {
-          "date": "2026-08-13",
-          "price": 6.743
-        },
         {
           "date": "2026-08-14",
           "price": 6.7413
@@ -1457,29 +1544,45 @@
         {
           "date": "2026-09-18",
           "price": 6.6976
+        },
+        {
+          "date": "2026-09-21",
+          "price": 6.6954
+        },
+        {
+          "date": "2026-09-22",
+          "price": 6.7001
+        },
+        {
+          "date": "2026-09-23",
+          "price": 6.7074
+        },
+        {
+          "date": "2026-09-24",
+          "price": 6.7126
         }
       ],
-      "date": "2026-09-20"
+      "date": "2026-09-25"
     },
     "cny": {
       "latest": {
-        "price": 6.7521,
+        "price": 6.7489,
         "change_pct": 0
       },
-      "date": "2026-09-20"
+      "date": "2026-09-25"
     }
   },
   "futures": {
     "shfe": {
-      "date": "20260619",
+      "date": "20260925",
       "products": []
     },
     "cffex": {
-      "date": "20260619",
+      "date": "20260925",
       "products": []
     },
     "dce": {
-      "date": "20260619",
+      "date": "20260925",
       "products": []
     },
     "czce": {
@@ -1489,7 +1592,7 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-09-18",
+      "date": "2026-09-24",
       "value": 100,
       "status": "极度贪婪",
       "note": "基于沪深300估值推算"
@@ -1499,11 +1602,27 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-09-18",
-        "price": 947.09,
-        "change_pct": 1.31
+        "date": "2026-09-24",
+        "price": 926.01,
+        "change_pct": -0.86
       },
       "history": [
+        {
+          "date": "2026-09-24",
+          "price": 926.01
+        },
+        {
+          "date": "2026-09-23",
+          "price": 934.0
+        },
+        {
+          "date": "2026-09-22",
+          "price": 931.98
+        },
+        {
+          "date": "2026-09-21",
+          "price": 938.09
+        },
         {
           "date": "2026-09-18",
           "price": 947.09
@@ -1607,47 +1726,28 @@
         {
           "date": "2026-08-14",
           "price": 940.72
-        },
-        {
-          "date": "2026-08-13",
-          "price": 949.24
-        },
-        {
-          "date": "2026-08-12",
-          "price": 955.75
-        },
-        {
-          "date": "2026-08-11",
-          "price": 946.7
-        },
-        {
-          "date": "2026-08-10",
-          "price": 944.67
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-09-18",
-        "price": 728.0,
-        "change_pct": -7.28
+        "date": "2026-09-24",
+        "price": 743.5,
+        "change_pct": 8.05
       }
     }
   },
   "rates": {
     "china_lpr": {
       "latest": {
-        "date": "2026-08-20",
+        "date": "2026-09-20",
         "lpr_1y": 3.0,
         "lpr_5y": 3.5
       },
       "history": []
     },
     "us_treasury_5y": {
-      "latest": {
-        "date": "2026-09-18",
-        "yield": 4.86
-      }
+      "latest": null
     }
   },
   "inflation": {
@@ -1910,13 +2010,28 @@
   "margin": {
     "sse": {
       "latest": {
-        "date": "20260918",
-        "rzye": 1334561902108.0,
-        "rzmre": 99491145691.0,
-        "rqye": 3122423378.0,
-        "rzrqye": 1353274918308.0
+        "date": "20260923",
+        "rzye": 1340782189632.0,
+        "rzmre": 86468467468.0,
+        "rqye": 3122428178.0,
+        "rzrqye": 1359569012639.0
       },
       "history": [
+        {
+          "date": "20260923",
+          "rzye": 1340782189632.0,
+          "rzrqye": 1359569012639.0
+        },
+        {
+          "date": "20260922",
+          "rzye": 1340797151676.0,
+          "rzrqye": 1359731873397.0
+        },
+        {
+          "date": "20260921",
+          "rzye": 1339890337610.0,
+          "rzrqye": 1358814894468.0
+        },
         {
           "date": "20260918",
           "rzye": 1334561902108.0,
@@ -2051,21 +2166,6 @@
           "date": "20260813",
           "rzye": 1356308222032.0,
           "rzrqye": 1372937492903.0
-        },
-        {
-          "date": "20260812",
-          "rzye": 1355236713043.0,
-          "rzrqye": 1371828633474.0
-        },
-        {
-          "date": "20260811",
-          "rzye": 1350423724690.0,
-          "rzrqye": 1366808080022.0
-        },
-        {
-          "date": "20260810",
-          "rzye": 1350088413944.0,
-          "rzrqye": 1366597194533.0
         }
       ]
     },
