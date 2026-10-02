@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T02:43:16+08:00",
+  "updated_at": "2026-10-03T02:14:59+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -1478,14 +1478,10 @@
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.7045,
+        "price": 6.7046,
         "change_pct": 0
       },
       "history": [
-        {
-          "date": "2026-08-21",
-          "price": 6.7206
-        },
         {
           "date": "2026-08-24",
           "price": 6.7227
@@ -1601,16 +1597,20 @@
         {
           "date": "2026-10-01",
           "price": 6.7045
+        },
+        {
+          "date": "2026-10-02",
+          "price": 6.7046
         }
       ],
-      "date": "2026-10-02"
+      "date": "2026-10-03"
     },
     "cny": {
       "latest": {
         "price": 6.7351,
         "change_pct": 0
       },
-      "date": "2026-10-02"
+      "date": "2026-10-03"
     }
   },
   "futures": {
@@ -1789,8 +1789,8 @@
     },
     "us_treasury_5y": {
       "latest": {
-        "date": "2026-09-30",
-        "yield": 5.09
+        "date": "2026-10-01",
+        "yield": 5.01
       }
     }
   },
