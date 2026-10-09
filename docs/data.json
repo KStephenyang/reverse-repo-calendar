@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-10-07T02:49:21+08:00",
+  "updated_at": "2026-10-10T02:41:02+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
-    "futures": "ok",
+    "futures": "error",
     "sentiment": "ok",
     "commodities": "ok",
     "rates": "ok",
@@ -13,9 +13,24 @@
     "margin": "ok",
     "money_supply": "ok"
   },
-  "fetch_errors": {},
+  "fetch_errors": {
+    "futures": "AttributeError: 'dict' object has no attribute 'columns'"
+  },
   "reverse_repo": {
     "records": [
+      {
+        "date": "2026-10-09",
+        "term": 7,
+        "total_amount": 20,
+        "rate": 1.4,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 20,
+            "rate": 1.4
+          }
+        ]
+      },
       {
         "date": "2026-09-29",
         "term": 7,
@@ -1472,28 +1487,26 @@
         "operation": 0,
         "maturity": 905,
         "net": -905
+      },
+      "2026-10-09": {
+        "operation": 20,
+        "maturity": 0,
+        "net": 20
+      },
+      "2026-10-16": {
+        "operation": 0,
+        "maturity": 20,
+        "net": -20
       }
     }
   },
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.7046,
+        "price": 6.6921,
         "change_pct": 0
       },
       "history": [
-        {
-          "date": "2026-08-26",
-          "price": 6.7205
-        },
-        {
-          "date": "2026-08-27",
-          "price": 6.7203
-        },
-        {
-          "date": "2026-08-28",
-          "price": 6.7209
-        },
         {
           "date": "2026-08-31",
           "price": 6.7197
@@ -1601,16 +1614,28 @@
         {
           "date": "2026-10-06",
           "price": 6.7046
+        },
+        {
+          "date": "2026-10-07",
+          "price": 6.7046
+        },
+        {
+          "date": "2026-10-08",
+          "price": 6.7023
+        },
+        {
+          "date": "2026-10-09",
+          "price": 6.6921
         }
       ],
-      "date": "2026-10-07"
+      "date": "2026-10-10"
     },
     "cny": {
       "latest": {
-        "price": 6.7351,
+        "price": 6.733,
         "change_pct": 0
       },
-      "date": "2026-10-07"
+      "date": "2026-10-10"
     }
   },
   "futures": {
@@ -1633,8 +1658,8 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-09-30",
-      "value": 93.0,
+      "date": "2026-10-09",
+      "value": 77.2,
       "status": "极度贪婪",
       "note": "基于沪深300估值推算"
     },
@@ -1643,11 +1668,19 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-09-30",
-        "price": 907.32,
-        "change_pct": 1.09
+        "date": "2026-10-09",
+        "price": 904.48,
+        "change_pct": 1.4
       },
       "history": [
+        {
+          "date": "2026-10-09",
+          "price": 904.48
+        },
+        {
+          "date": "2026-10-08",
+          "price": 892.0
+        },
         {
           "date": "2026-09-30",
           "price": 907.32
@@ -1759,22 +1792,14 @@
         {
           "date": "2026-08-21",
           "price": 983.56
-        },
-        {
-          "date": "2026-08-20",
-          "price": 968.14
-        },
-        {
-          "date": "2026-08-19",
-          "price": 945.22
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-09-30",
-        "price": 711.0,
-        "change_pct": -0.13
+        "date": "2026-10-09",
+        "price": 734.1,
+        "change_pct": -3.22
       }
     }
   },
@@ -1788,10 +1813,7 @@
       "history": []
     },
     "us_treasury_5y": {
-      "latest": {
-        "date": "2026-10-05",
-        "yield": 5.06
-      }
+      "latest": null
     }
   },
   "inflation": {
@@ -2054,13 +2076,18 @@
   "margin": {
     "sse": {
       "latest": {
-        "date": "20260930",
-        "rzye": 1296520652053.0,
-        "rzmre": 62006897126.0,
-        "rqye": 3220216902.0,
-        "rzrqye": 1315413245429.0
+        "date": "20261008",
+        "rzye": 1298438300567.0,
+        "rzmre": 75710415745.0,
+        "rqye": 3251744595.0,
+        "rzrqye": 1317374992585.0
       },
       "history": [
+        {
+          "date": "20261008",
+          "rzye": 1298438300567.0,
+          "rzrqye": 1317374992585.0
+        },
         {
           "date": "20260930",
           "rzye": 1296520652053.0,
@@ -2205,11 +2232,6 @@
           "date": "20260820",
           "rzye": 1352435512838.0,
           "rzrqye": 1369510753023.0
-        },
-        {
-          "date": "20260819",
-          "rzye": 1353655859899.0,
-          "rzrqye": 1370471765166.0
         }
       ]
     },
