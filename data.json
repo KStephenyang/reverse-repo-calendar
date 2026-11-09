@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T02:14:54+08:00",
+  "updated_at": "2026-11-10T06:53:50+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -1741,14 +1741,10 @@
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.6713,
-        "change_pct": 0
+        "price": 1.116e-05,
+        "change_pct": 0.09
       },
       "history": [
-        {
-          "date": "2026-09-28",
-          "price": 6.7105
-        },
         {
           "date": "2026-09-29",
           "price": 6.7034
@@ -1864,16 +1860,20 @@
         {
           "date": "2026-11-06",
           "price": 6.6713
+        },
+        {
+          "date": "2026-11-09",
+          "price": 6.6728
         }
       ],
-      "date": "2026-11-09"
+      "date": "2026-11-10"
     },
     "cny": {
       "latest": {
-        "price": 6.716799999999999,
+        "price": 6.7188,
         "change_pct": 0
       },
-      "date": "2026-11-09"
+      "date": "2026-11-10"
     }
   },
   "futures": {
@@ -1896,8 +1896,8 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-11-06",
-      "value": 36.6,
+      "date": "2026-11-09",
+      "value": 37.6,
       "status": "恐惧",
       "note": "基于沪深300估值推算"
     },
@@ -1906,11 +1906,15 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-11-06",
-        "price": 868.57,
-        "change_pct": -1.76
+        "date": "2026-11-09",
+        "price": 881.0,
+        "change_pct": 1.43
       },
       "history": [
+        {
+          "date": "2026-11-09",
+          "price": 881.0
+        },
         {
           "date": "2026-11-06",
           "price": 868.57
@@ -2026,18 +2030,14 @@
         {
           "date": "2026-09-21",
           "price": 938.09
-        },
-        {
-          "date": "2026-09-18",
-          "price": 947.09
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-11-06",
-        "price": 644.0,
-        "change_pct": 3.16
+        "date": "2026-11-09",
+        "price": 624.0,
+        "change_pct": -3.11
       }
     }
   },
@@ -2052,20 +2052,24 @@
     },
     "us_treasury_5y": {
       "latest": {
-        "date": "2026-11-06",
-        "yield": 4.64
+        "date": "2026-11-09",
+        "yield": 4.67
       }
     }
   },
   "inflation": {
     "china_cpi": {
       "latest": {
-        "date": "2026-09",
-        "cpi_val": 100.9,
-        "cpi_yoy": 0.9,
-        "cpi_mom": 0.2
+        "date": "2026-10",
+        "cpi_val": 100.7,
+        "cpi_yoy": 0.7,
+        "cpi_mom": 0.0
       },
       "history": [
+        {
+          "date": "2026-10",
+          "cpi_yoy": 0.7
+        },
         {
           "date": "2026-09",
           "cpi_yoy": 0.9
@@ -2109,20 +2113,20 @@
         {
           "date": "2025-11",
           "cpi_yoy": 0.7
-        },
-        {
-          "date": "2025-10",
-          "cpi_yoy": 0.2
         }
       ]
     },
     "china_ppi": {
       "latest": {
-        "date": "2026-09",
-        "ppi_val": 105.0,
-        "ppi_yoy": 5.0
+        "date": "2026-10",
+        "ppi_val": 105.7,
+        "ppi_yoy": 5.7
       },
       "history": [
+        {
+          "date": "2026-10",
+          "ppi_yoy": 5.7
+        },
         {
           "date": "2026-09",
           "ppi_yoy": 5.0
@@ -2166,10 +2170,6 @@
         {
           "date": "2025-11",
           "ppi_yoy": -2.2
-        },
-        {
-          "date": "2025-10",
-          "ppi_yoy": -2.1
         }
       ]
     },
