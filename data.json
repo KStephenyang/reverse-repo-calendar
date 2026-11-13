@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13T04:40:31+08:00",
+  "updated_at": "2026-11-14T04:21:43+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -11,13 +11,27 @@
     "pmi": "ok",
     "employment": "ok",
     "margin": "ok",
-    "money_supply": "ok"
+    "money_supply": "error"
   },
   "fetch_errors": {
-    "futures": "AttributeError: module 'akshare' has no attribute 'get_shfe_rank_table'"
+    "futures": "AttributeError: module 'akshare' has no attribute 'get_shfe_rank_table'",
+    "money_supply": "无数据返回"
   },
   "reverse_repo": {
     "records": [
+      {
+        "date": "2026-11-13",
+        "term": 7,
+        "total_amount": 3000,
+        "rate": 1.25,
+        "ops_detail": [
+          {
+            "term": 7,
+            "amount": 3000,
+            "rate": 1.25
+          }
+        ]
+      },
       {
         "date": "2026-10-30",
         "term": 7,
@@ -1735,20 +1749,26 @@
         "operation": 0,
         "maturity": 150,
         "net": -150
+      },
+      "2026-11-13": {
+        "operation": 3000,
+        "maturity": 0,
+        "net": 3000
+      },
+      "2026-11-20": {
+        "operation": 0,
+        "maturity": 3000,
+        "net": -3000
       }
     }
   },
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.6683,
+        "price": 6.6719,
         "change_pct": 0
       },
       "history": [
-        {
-          "date": "2026-10-02",
-          "price": 6.7046
-        },
         {
           "date": "2026-10-05",
           "price": 6.7046
@@ -1864,16 +1884,20 @@
         {
           "date": "2026-11-12",
           "price": 6.6683
+        },
+        {
+          "date": "2026-11-13",
+          "price": 6.6719
         }
       ],
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     },
     "cny": {
       "latest": {
-        "price": 6.7174000000000005,
+        "price": 6.715199999999999,
         "change_pct": 0
       },
-      "date": "2026-11-13"
+      "date": "2026-11-14"
     }
   },
   "futures": {
@@ -1896,9 +1920,9 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-11-12",
-      "value": 45.7,
-      "status": "中性",
+      "date": "2026-11-13",
+      "value": 39.0,
+      "status": "恐惧",
       "note": "基于沪深300估值推算"
     },
     "history": []
@@ -1906,11 +1930,15 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-11-12",
-        "price": 851.33,
-        "change_pct": -2.48
+        "date": "2026-11-13",
+        "price": 837.55,
+        "change_pct": -1.62
       },
       "history": [
+        {
+          "date": "2026-11-13",
+          "price": 837.55
+        },
         {
           "date": "2026-11-12",
           "price": 851.33
@@ -2026,18 +2054,14 @@
         {
           "date": "2026-09-28",
           "price": 900.89
-        },
-        {
-          "date": "2026-09-24",
-          "price": 926.01
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-11-12",
-        "price": 599.9,
-        "change_pct": 1.35
+        "date": "2026-11-13",
+        "price": 625.5,
+        "change_pct": 4.27
       }
     }
   },
@@ -2236,56 +2260,8 @@
       ]
     },
     "us_ism": {
-      "latest": {
-        "date": "2025-09-02",
-        "value": 48.7
-      },
-      "history": [
-        {
-          "date": "2025-09-02",
-          "value": 48.7
-        },
-        {
-          "date": "2025-08-01",
-          "value": 48.0
-        },
-        {
-          "date": "2025-07-01",
-          "value": 49.0
-        },
-        {
-          "date": "2025-06-02",
-          "value": 48.5
-        },
-        {
-          "date": "2025-05-01",
-          "value": 48.7
-        },
-        {
-          "date": "2025-04-01",
-          "value": 49.0
-        },
-        {
-          "date": "2025-03-03",
-          "value": 50.3
-        },
-        {
-          "date": "2025-02-03",
-          "value": 50.9
-        },
-        {
-          "date": "2025-01-03",
-          "value": 49.3
-        },
-        {
-          "date": "2024-12-02",
-          "value": 48.4
-        },
-        {
-          "date": "2024-11-01",
-          "value": 46.5
-        }
-      ]
+      "latest": null,
+      "history": []
     }
   },
   "employment": {
@@ -2297,30 +2273,29 @@
       "history": []
     },
     "us_nonfarm": {
-      "latest": {
-        "date": "2025-08-01",
-        "value": 7.3
-      },
+      "latest": null,
       "history": []
     },
     "us_unemployment_rate": {
-      "latest": {
-        "date": "2025-08-01",
-        "value": 4.2
-      },
+      "latest": null,
       "history": []
     }
   },
   "margin": {
     "sse": {
       "latest": {
-        "date": "20261111",
-        "rzye": 1176749979321.0,
-        "rzmre": 75642760774.0,
-        "rqye": 3194844516.0,
-        "rzrqye": 1195572928241.0
+        "date": "20261112",
+        "rzye": 1177935693951.0,
+        "rzmre": 90323568835.0,
+        "rqye": 3206501978.0,
+        "rzrqye": 1196678971772.0
       },
       "history": [
+        {
+          "date": "20261112",
+          "rzye": 1177935693951.0,
+          "rzrqye": 1196678971772.0
+        },
         {
           "date": "20261111",
           "rzye": 1176749979321.0,
@@ -2465,11 +2440,6 @@
           "date": "20260924",
           "rzye": 1331841736225.0,
           "rzrqye": 1350506223746.0
-        },
-        {
-          "date": "20260923",
-          "rzye": 1340782189632.0,
-          "rzrqye": 1359569012639.0
         }
       ]
     },
