@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T04:21:43+08:00",
+  "updated_at": "2026-11-15T02:40:11+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -14,7 +14,7 @@
     "money_supply": "error"
   },
   "fetch_errors": {
-    "futures": "AttributeError: module 'akshare' has no attribute 'get_shfe_rank_table'",
+    "futures": "AttributeError: get_shfe_rank_table 已在 1.20.31 更名为 futures_rank_table_shfe，请改用 ak.futures_rank_table_shfe；参数与返回的列也可能有调整，用 ak.interface_info(\"futures_rank_table_shfe\") 查看。完整对照见 https://akshare.akfamily.xyz/changelog.html#changelog-rename",
     "money_supply": "无数据返回"
   },
   "reverse_repo": {
@@ -1890,14 +1890,14 @@
           "price": 6.6719
         }
       ],
-      "date": "2026-11-14"
+      "date": "2026-11-15"
     },
     "cny": {
       "latest": {
-        "price": 6.715199999999999,
+        "price": 6.6719,
         "change_pct": 0
       },
-      "date": "2026-11-14"
+      "date": "2026-11-15"
     }
   },
   "futures": {
@@ -2067,11 +2067,7 @@
   },
   "rates": {
     "china_lpr": {
-      "latest": {
-        "date": "2026-10-20",
-        "lpr_1y": 3.0,
-        "lpr_5y": 3.5
-      },
+      "latest": null,
       "history": []
     },
     "us_treasury_5y": {
@@ -2284,13 +2280,18 @@
   "margin": {
     "sse": {
       "latest": {
-        "date": "20261112",
-        "rzye": 1177935693951.0,
-        "rzmre": 90323568835.0,
-        "rqye": 3206501978.0,
-        "rzrqye": 1196678971772.0
+        "date": "20261113",
+        "rzye": 1169263907994.0,
+        "rzmre": 73820243959.0,
+        "rqye": 3280877896.0,
+        "rzrqye": 1188220392174.0
       },
       "history": [
+        {
+          "date": "20261113",
+          "rzye": 1169263907994.0,
+          "rzrqye": 1188220392174.0
+        },
         {
           "date": "20261112",
           "rzye": 1177935693951.0,
@@ -2435,11 +2436,6 @@
           "date": "20260928",
           "rzye": 1318768541155.0,
           "rzrqye": 1337188457979.0
-        },
-        {
-          "date": "20260924",
-          "rzye": 1331841736225.0,
-          "rzrqye": 1350506223746.0
         }
       ]
     },
