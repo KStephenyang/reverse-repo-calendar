@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T02:40:11+08:00",
+  "updated_at": "2026-11-16T03:16:11+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -1890,14 +1890,14 @@
           "price": 6.6719
         }
       ],
-      "date": "2026-11-15"
+      "date": "2026-11-16"
     },
     "cny": {
       "latest": {
         "price": 6.6719,
         "change_pct": 0
       },
-      "date": "2026-11-15"
+      "date": "2026-11-16"
     }
   },
   "futures": {
