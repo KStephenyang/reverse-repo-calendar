@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-16T03:16:11+08:00",
+  "updated_at": "2026-11-17T06:46:07+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -1765,14 +1765,10 @@
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.6719,
+        "price": 6.6665,
         "change_pct": 0
       },
       "history": [
-        {
-          "date": "2026-10-05",
-          "price": 6.7046
-        },
         {
           "date": "2026-10-06",
           "price": 6.7046
@@ -1888,16 +1884,20 @@
         {
           "date": "2026-11-13",
           "price": 6.6719
+        },
+        {
+          "date": "2026-11-16",
+          "price": 6.6665
         }
       ],
-      "date": "2026-11-16"
+      "date": "2026-11-17"
     },
     "cny": {
       "latest": {
-        "price": 6.6719,
+        "price": 6.6665,
         "change_pct": 0
       },
-      "date": "2026-11-16"
+      "date": "2026-11-17"
     }
   },
   "futures": {
@@ -1920,8 +1920,8 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-11-13",
-      "value": 39.0,
+      "date": "2026-11-16",
+      "value": 27.3,
       "status": "恐惧",
       "note": "基于沪深300估值推算"
     },
@@ -1930,11 +1930,15 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-11-13",
-        "price": 837.55,
-        "change_pct": -1.62
+        "date": "2026-11-16",
+        "price": 829.49,
+        "change_pct": -0.96
       },
       "history": [
+        {
+          "date": "2026-11-16",
+          "price": 829.49
+        },
         {
           "date": "2026-11-13",
           "price": 837.55
@@ -2050,18 +2054,14 @@
         {
           "date": "2026-09-29",
           "price": 897.53
-        },
-        {
-          "date": "2026-09-28",
-          "price": 900.89
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-11-13",
-        "price": 625.5,
-        "change_pct": 4.27
+        "date": "2026-11-16",
+        "price": 620.8,
+        "change_pct": -0.75
       }
     }
   },
@@ -2440,7 +2440,13 @@
       ]
     },
     "szse": {
-      "latest": null,
+      "latest": {
+        "date": "20261117",
+        "rzye": 7077.67,
+        "rzmre": 321.08,
+        "rqye": 24.34,
+        "rzrqye": 7234.97
+      },
       "history": []
     }
   },
