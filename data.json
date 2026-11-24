@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-24T08:37:11+08:00",
+  "updated_at": "2026-11-25T06:56:07+08:00",
   "fetch_status": {
     "reverse_repo": "ok",
     "forex": "ok",
@@ -1765,14 +1765,10 @@
   "forex": {
     "cnh": {
       "latest": {
-        "price": 6.6647,
+        "price": 6.6645,
         "change_pct": 0
       },
       "history": [
-        {
-          "date": "2026-10-13",
-          "price": 6.6938
-        },
         {
           "date": "2026-10-14",
           "price": 6.6927
@@ -1888,16 +1884,20 @@
         {
           "date": "2026-11-23",
           "price": 6.6647
+        },
+        {
+          "date": "2026-11-24",
+          "price": 6.6645
         }
       ],
-      "date": "2026-11-24"
+      "date": "2026-11-25"
     },
     "cny": {
       "latest": {
-        "price": 6.6647,
+        "price": 6.6645,
         "change_pct": 0
       },
-      "date": "2026-11-24"
+      "date": "2026-11-25"
     }
   },
   "futures": {
@@ -1920,8 +1920,8 @@
   },
   "sentiment": {
     "latest": {
-      "date": "2026-11-23",
-      "value": 20.1,
+      "date": "2026-11-24",
+      "value": 22.8,
       "status": "极度恐惧",
       "note": "基于沪深300估值推算"
     },
@@ -1930,11 +1930,15 @@
   "commodities": {
     "gold": {
       "latest": {
-        "date": "2026-11-23",
-        "price": 781.4,
-        "change_pct": 2.2
+        "date": "2026-11-24",
+        "price": 777.72,
+        "change_pct": -0.47
       },
       "history": [
+        {
+          "date": "2026-11-24",
+          "price": 777.72
+        },
         {
           "date": "2026-11-23",
           "price": 781.4
@@ -2050,18 +2054,14 @@
         {
           "date": "2026-10-14",
           "price": 894.5
-        },
-        {
-          "date": "2026-10-13",
-          "price": 904.45
         }
       ]
     },
     "oil_cn": {
       "latest": {
-        "date": "2026-11-23",
-        "price": 586.0,
-        "change_pct": -0.85
+        "date": "2026-11-24",
+        "price": 571.1,
+        "change_pct": -2.54
       }
     }
   },
